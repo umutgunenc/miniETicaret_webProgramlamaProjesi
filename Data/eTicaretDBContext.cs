@@ -7,6 +7,10 @@ namespace miniETicaret.Data
 {
     public class eTicaretDBContext : IdentityDbContext<AppUser, AppRole, int>
     {
+        public eTicaretDBContext()
+        {
+            
+        }
         public eTicaretDBContext(DbContextOptions<eTicaretDBContext> options) : base(options)
         {
 

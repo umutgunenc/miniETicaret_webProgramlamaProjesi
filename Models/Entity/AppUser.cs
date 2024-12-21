@@ -16,33 +16,13 @@ namespace miniETicaret.Models.Entity
         {
 
         }
-        [Required]
-        [MaxLength(11)]
-        public string TCKN { get; set; }
-        [Required]
-        [MaxLength(256)]
-        public string Name { get; set; }
-        [Required]
-        [MaxLength(256)]
-        public string SurName { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
-        [Required]
-        public bool TermOfUse { get; set; }
-        [Required]
-        public string Address { get; set; }
-        [Required]
-        [MaxLength(256)]
-        public string UserName { get; set; }
-        [Required]
-        [MaxLength(13)]
-        public string PhoneNumber { get; set; }
-        [Required]
-        [MaxLength(256)]
-        public string Email { get; set; }
 
-        [Required]
-        public string PasswordHash { get; set; }
+        public string TCKN { get; set; }
+        public string Name { get; set; }
+        public string SurName { get; set; }
+        public bool IsActive { get; set; }
+        public bool TermOfUse { get; set; }
+        public string Address { get; set; }
 
         public ICollection<Order> CustomerOrders { get; set; }
         public ICollection<Order> SellerOrders { get; set; }

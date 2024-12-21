@@ -1,0 +1,32 @@
+﻿@model miniETicaret.Models.ViewModel.Admin.AddCategoryViewModel
+
+@section CustommerMenu {
+
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+
+<form asp-action="AddCategory" asp-controller="Admin" method="post">
+    <div class="input-group mb-3">
+        <input asp-for="Name" class="form-control bg-light" placeholder="Kategori Adı">
+        <div class="input-group-append">
+            <button class="btn btn-info" type="submit">Ekle</button>
+        </div>
+    </div>
+    <div class="input-group">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Name">
+        </span>
+    </div>
+</form>
+
+
+
+@if (TempData["CategoryAdded"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["CategoryAdded"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}

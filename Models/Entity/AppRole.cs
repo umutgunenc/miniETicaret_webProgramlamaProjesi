@@ -10,8 +10,6 @@ namespace miniETicaret.Models.Entity
         {
             
         }
-        [Required]
-        [MaxLength(256)]
-        public string Name { get; set; }
+
     }
 }

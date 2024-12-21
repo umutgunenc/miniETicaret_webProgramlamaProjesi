@@ -19,7 +19,6 @@ namespace miniETicaret.Models.Entity
         [ForeignKey(nameof(ProductId))]
         public virtual Product Product { get; set; }
         public int ProductId { get; set; }
-        [Required]
         public int Quantity { get; set; }
 
     }
