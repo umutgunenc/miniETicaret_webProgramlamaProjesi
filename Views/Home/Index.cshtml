@@ -1,20 +1,22 @@
-﻿@section CustommerMenu {
+﻿@model IndexViewModel
+
+@section CustommerMenu {
     @await Html.PartialAsync("_CustommerMenu")
 }
 
 <h2 class="text-center">Ürünlerimiz</h2>
 
 <div class="row">
-    @for (int i = 0; i < 20; i++)
+    @foreach (var product in Model.Products)
     {
         <div class="col-md-3 mb-4">
             <div class="card" @*style="width:18rem"*@>
-                <a href="@Url.Action("Detail", "Product", new { id = i })">
-                    <img src="~/Images/9_5.png" class="card-img-top" alt="...">
+                <a href="@Url.Action("Detail", "Product", new { id = product.Id })">
+                    <img src="@product.ImgUrl" class="card-img-top" alt="@product.Name">
                 </a>
                 <div class="card-body">
-                    <p class="card-text multi-line-text">Some quick example text to build on the card title and make up the bulk of the card's content. This is a longer text that should get truncated after two lines, so we are going to see if it works!</p>
-                    <p class="card-text text-right mb-0">99.00 ₺</p>
+                    <p class="card-text multi-line-text">@product.Despriction</p>
+                    <p class="card-text text-right mb-0">@product.Price ₺</p>
                 </div>
             </div>
         </div>
