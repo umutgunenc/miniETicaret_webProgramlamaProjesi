@@ -1,16 +1,15 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using miniETicaret.Data;
+using miniETicaret.Models.Entity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace miniETicaret
 {
@@ -33,6 +32,15 @@ namespace miniETicaret
             services.AddDbContext<eTicaretDBContext>(options =>
                 options.UseSqlite("Data Source=eTicaret.db"));
 
+            //Identity için servis eklendi
+            services.AddIdentity<AppUser, AppRole>(options => 
+            {
+                //options.Lockout.MaxFailedAccessAttempts = 3;  // 3 kere şifre yanlış girilirse blocklama yapar
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // 15 dakika boyunca yeni bir istek atılmaz ise kullanıcı logout olur
+            })
+                .AddEntityFrameworkStores<eTicaretDBContext>()
+                .AddDefaultTokenProviders();
+
 
         }
 
@@ -51,10 +59,10 @@ namespace miniETicaret
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

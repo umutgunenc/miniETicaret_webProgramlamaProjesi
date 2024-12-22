@@ -9,8 +9,8 @@ using miniETicaret.Data;
 namespace miniETicaret.Migrations
 {
     [DbContext(typeof(eTicaretDBContext))]
-    [Migration("20241221212437_mig2")]
-    partial class mig2
+    [Migration("20241222221422_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -96,6 +96,23 @@ namespace miniETicaret.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            RoleId = 3
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -128,7 +145,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -143,6 +159,26 @@ namespace miniETicaret.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "bb199053-8fdf-4c56-8e9e-693ad918d5a3",
+                            Name = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConcurrencyStamp = "943e009a-bd19-4568-b6d4-3e6aa7fb2f64",
+                            Name = "SELLER"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ConcurrencyStamp = "408da3c5-c587-4415-9570-2c106b69c724",
+                            Name = "CUSTOMER"
+                        });
                 });
 
             modelBuilder.Entity("miniETicaret.Models.Entity.AppUser", b =>
@@ -155,7 +191,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -163,7 +198,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -180,8 +214,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
@@ -193,12 +225,9 @@ namespace miniETicaret.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -208,13 +237,9 @@ namespace miniETicaret.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SurName")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TCKN")
-                        .IsRequired()
-                        .HasMaxLength(11)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TermOfUse")
@@ -224,7 +249,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -238,6 +262,71 @@ namespace miniETicaret.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            Address = "Istanbul",
+                            ConcurrencyStamp = "d6718709-85a2-4113-8340-d77302975b10",
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = false,
+                            IsActive = true,
+                            LockoutEnabled = false,
+                            Name = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKXVQCgQmdaYLFxEHlSQdce0474sb9bHI4iBcbbXyNNIdSVqdFU1P0E6U2ocFzpjkA==",
+                            PhoneNumber = "05300000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ff8f1b56-cc5e-48b8-9662-21f73bd65123",
+                            SurName = "ADMIN",
+                            TCKN = "12345678901",
+                            TermOfUse = true,
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            Address = "Ankara",
+                            ConcurrencyStamp = "5470cab8-fb5a-45b4-86e2-613eab147864",
+                            Email = "seller@gmail.com",
+                            EmailConfirmed = false,
+                            IsActive = true,
+                            LockoutEnabled = false,
+                            Name = "SELLER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEQi4/OumXhaiNtEfh3Y6n14H7dahoeSdiyYxhOgKGCsHCYpR9U3cS7bev0Vwh1XZA==",
+                            PhoneNumber = "05300000001",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6e2c9ac8-55ea-45a1-818e-11b65dc34f20",
+                            SurName = "SELLER",
+                            TCKN = "12345678902",
+                            TermOfUse = true,
+                            TwoFactorEnabled = false,
+                            UserName = "seller"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessFailedCount = 0,
+                            Address = "İzmir",
+                            ConcurrencyStamp = "62d4bcc5-6a44-46df-926e-7759f7981071",
+                            Email = "customer@gmail.com",
+                            EmailConfirmed = false,
+                            IsActive = true,
+                            LockoutEnabled = false,
+                            Name = "CUSTOMER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDKaTSyU3LkZDAsg9f2s1GsvrdzAgylbRHamvg36CZGP2VCeFxb+0f7l3pJLJGP8qw==",
+                            PhoneNumber = "05300000002",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5f996b2f-4b47-42fc-8498-99ca141280b7",
+                            SurName = "CUSTOMER",
+                            TCKN = "12345678903",
+                            TermOfUse = true,
+                            TwoFactorEnabled = false,
+                            UserName = "customer"
+                        });
                 });
 
             modelBuilder.Entity("miniETicaret.Models.Entity.Cart", b =>
@@ -271,8 +360,6 @@ namespace miniETicaret.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -290,12 +377,9 @@ namespace miniETicaret.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Despriction")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("OrderTime")
@@ -326,19 +410,15 @@ namespace miniETicaret.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Despriction")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImgUrl")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")

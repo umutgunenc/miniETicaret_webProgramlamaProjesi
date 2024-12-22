@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using miniETicaret.Models.Entity;
+using System;
 
 
 namespace miniETicaret.Data
@@ -9,7 +11,7 @@ namespace miniETicaret.Data
     {
         public eTicaretDBContext()
         {
-            
+
         }
         public eTicaretDBContext(DbContextOptions<eTicaretDBContext> options) : base(options)
         {
@@ -62,7 +64,82 @@ namespace miniETicaret.Data
             // CustomerId ve ProductId birleşik anahtar olarak kullanılır
 
             modelBuilder.Entity<Cart>()
-                .HasKey(c => new { c.CustomerId, c.ProductId });  
+                .HasKey(c => new { c.CustomerId, c.ProductId });
+
+            #region DumpData
+
+            var passwordHasher = new PasswordHasher<AppUser>();
+
+            AppRole admin = new AppRole { Id = 1, Name = "ADMIN" };
+            AppRole seller = new AppRole { Id = 2, Name = "SELLER" };
+            AppRole customer = new AppRole { Id = 3, Name = "CUSTOMER" };
+
+            AppUser adminUser = new AppUser
+            {
+                Id = 1,
+                UserName = "admin",
+                Email = "admin@gmail.com",
+                Name = "ADMIN",
+                SurName = "ADMIN",
+                TCKN = "12345678901",
+                IsActive = true,
+                TermOfUse = true,
+                PhoneNumber = "05300000000",
+                Address = "Istanbul",
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "123123123");
+
+            AppUser sellerUser = new AppUser
+            {
+                Id = 2,
+                UserName = "seller",
+                Email = "seller@gmail.com",
+                Name = "SELLER",
+                SurName = "SELLER",
+                TCKN = "12345678902",
+                IsActive = true,
+                TermOfUse = true,
+                PhoneNumber = "05300000001",
+                Address = "Ankara",
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+            sellerUser.PasswordHash = passwordHasher.HashPassword(sellerUser, "qweqweqwe");
+
+            AppUser customerUser = new AppUser
+            {
+                Id = 3,
+                UserName = "customer",
+                Email = "customer@gmail.com",
+                Name = "CUSTOMER",
+                SurName = "CUSTOMER",
+                TCKN = "12345678903",
+                IsActive = true,
+                TermOfUse = true,
+                PhoneNumber = "05300000002",
+                Address = "İzmir",
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+            customerUser.PasswordHash = passwordHasher.HashPassword(customerUser, "qweqweqwe");
+            
+            modelBuilder.Entity<AppRole>()
+                .HasData(admin, seller, customer);
+
+            modelBuilder.Entity<AppUser>()
+                .HasData(adminUser,sellerUser, customerUser);
+
+            modelBuilder.Entity<IdentityUserRole<int>>()
+                .HasData(
+                new IdentityUserRole<int> { RoleId = 1, UserId = 1 },
+                new IdentityUserRole<int> { RoleId = 2, UserId = 2 },
+                new IdentityUserRole<int> { RoleId = 3, UserId = 3 }
+                );
+
+
+
+            #endregion
+
+
 
         }
 

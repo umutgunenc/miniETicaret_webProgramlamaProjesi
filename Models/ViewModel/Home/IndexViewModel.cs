@@ -28,7 +28,8 @@ namespace miniETicaret.Models.ViewModel.Home
         public async Task<List<Product>> GetProductsAsync()
         {
             IQueryable<Product> query = _eTicaretDBContext.Products
-                .Where(x => x.IsActive == true)
+                .Include(p=>p.Category)
+                .Where(x => x.IsActive == true && x.Category.IsActive==true)
                 .Select(x => new Product
                 {
                     Id = x.Id,
