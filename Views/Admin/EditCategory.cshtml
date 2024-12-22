@@ -1,0 +1,21 @@
+﻿@model EditCategoryViewModel
+
+@section CustommerMenu {
+
+    @await Html.PartialAsync("_AdminMenu")
+}
+
+<form asp-action="EditCategory" asp-controller="Admin" method="post">
+    <div class="input-group mb-3">
+        <select asp-for="Id" asp-items="Model.Categories" class="form-control bg-light">
+            <option value="" selected select disabled>Lütfen Düzenlenecek Kategoriyi Seçiniz</option>
+        </select>
+        <div class="input-group-append">
+            <button class="btn btn-info" type="submit">Seç</button>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <span class="font-weight-bold text-danger bg-light text-danger rounded d-block w-100" asp-validation-for="Id">
+        </span>
+    </div>
+</form>

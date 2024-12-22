@@ -3,15 +3,16 @@ using miniETicaret.Models.ViewModel.Admin;
 
 namespace miniETicaret.Validators.Admin
 {
-    public class AddCategoryValidator :AbstractValidator<AddCategoryViewModel>
+    public class EditCategoryDetailsValidator : AbstractValidator<EditCategoryDetailsViewModel>
     {
-        public AddCategoryValidator()
+        public EditCategoryDetailsValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Kategori Adını Giriniz")
                 .NotNull().WithMessage("Kategori Adını Giriniz")
                 .MaximumLength(256).WithMessage("Kategori Adı Maksimum 256 karakter Uzunluğunda Olabilir.")
-                .Must(ValidatorFunctions.BeUniqueCategoryName).WithMessage("Ekleme İşlemi Başarısız Oldu. Aynı Isimde Bir Kategori Zaten Sisteme Eklenmiş Durumda.");
+                .Must((model, name) => ValidatorFunctions.BeUniqueCategoryName(name, model.Id))
+                    .WithMessage("Bu İsimde Zaten Başka Bir Kayıt Mevcut.");
         }
     }
 }
