@@ -15,11 +15,13 @@ namespace miniETicaret.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly eTicaretDBContext _eTicaretDBContext;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AuthController(UserManager<AppUser> userManager, eTicaretDBContext eTicaretDBContext)
+        public AuthController(UserManager<AppUser> userManager, eTicaretDBContext eTicaretDBContext, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _eTicaretDBContext = eTicaretDBContext;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -29,9 +31,10 @@ namespace miniETicaret.Controllers
         }
 
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index","Home");
         }
 
         [HttpGet]
@@ -58,13 +61,13 @@ namespace miniETicaret.Controllers
             model.SurName = model.SurName.ToUpper();
             model.IsActive = true;
 
-            var identityResult = await _userManager.CreateAsync(model, model.PasswordHash);
+            var identityResult = await _userManager.CreateAsync(model, model.Password);
 
             if (!identityResult.Succeeded)
             {
                 foreach (var error in identityResult.Errors)
                 {
-                    ModelState.AddModelError("PasswordHash", error.Description);
+                    ModelState.AddModelError("Password", error.Description);
                 }
                 return View(model);
             }
@@ -109,13 +112,13 @@ namespace miniETicaret.Controllers
             model.SurName = model.SurName.ToUpper();
             model.IsActive = true;
 
-            var identityResult = await _userManager.CreateAsync(model, model.PasswordHash);
+            var identityResult = await _userManager.CreateAsync(model, model.Password);
 
             if (!identityResult.Succeeded)
             {
                 foreach (var error in identityResult.Errors)
                 {
-                    ModelState.AddModelError("PasswordHash", error.Description);
+                    ModelState.AddModelError("Password", error.Description);
                 }
                 return View(model);
             }

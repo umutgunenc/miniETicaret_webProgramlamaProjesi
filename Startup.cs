@@ -35,6 +35,12 @@ namespace miniETicaret
             //Identity için servis eklendi
             services.AddIdentity<AppUser, AppRole>(options => 
             {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireLowercase = false;
+
                 //options.Lockout.MaxFailedAccessAttempts = 3;  // 3 kere şifre yanlış girilirse blocklama yapar
                 //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // 15 dakika boyunca yeni bir istek atılmaz ise kullanıcı logout olur
             })

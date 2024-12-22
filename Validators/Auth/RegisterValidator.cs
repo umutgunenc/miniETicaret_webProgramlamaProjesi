@@ -31,8 +31,8 @@ namespace miniETicaret.Validators.Auth
                 .NotEmpty().WithMessage("Lütfen Türkiye Cumhuriyeti Kimlik Numaranizi Giriniz.")
                 .MaximumLength(11).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi 11 Karakter Uzunluğundadır.")
                 .MinimumLength(11).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi 11 Karakter Uzunluğundadır.")
-                .Must(ValidatorFunctions.BeNumber).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi Rakamlardan oluşmaktadır.")
-                .Must(ValidatorFunctions.BeUniqueTCKN).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi Rakamlardan oluşmaktadır.");
+                .Must(ValidatorFunctions.BeNumber).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi Rakamlardan Oluşmalıdır.")
+                .Must(ValidatorFunctions.BeUniqueTCKN).WithMessage("Türkiye Cumhuriyeti Kimlik Numarasi Rakamlardan Oluşmalıdır.");
 
             RuleFor(x => x.PhoneNumber)
                 .NotNull().WithMessage("Lütfen Telefon Numaranızı Giriniz.")
@@ -56,21 +56,20 @@ namespace miniETicaret.Validators.Auth
                 .Equal(true).WithMessage("Kullanım Şartlarını Kabul Etmelisiniz.");
 
 
-            RuleFor(x => x.PasswordHash)
+            RuleFor(x => x.Password)
                 .NotNull().WithMessage("Lütfen Şifrenizi Giriniz.")
                 .NotEmpty().WithMessage("Lütfen Şifrenizi Giriniz.")
                 .MinimumLength(8).WithMessage("Şifre En Az 8 Karakter Olmalıdır.")
                 .MaximumLength(50).WithMessage("Şifre Maksimum 50 Karakter Olabilir.");
-            //TODO : Şifre için kontroller eklenecek
-            //.Matches("[0-9]").WithMessage("Şifre en az bir rakam içermelidir.") 
-            //.Matches("[a-z]").WithMessage("Şifre en az bir küçük harf içermelidir.")
-            //.Matches("[A-Z]").WithMessage("Şifre en az bir büyük harf içermelidir.")
-            //.Matches("[^a-zA-Z0-9]").WithMessage("Şifre en az bir özel işaret içermelidir.");
+                //.Matches("[0-9]").WithMessage("Şifre en az bir rakam içermelidir.")
+                //.Matches("[a-z]").WithMessage("Şifre en az bir küçük harf içermelidir.")
+                //.Matches("[A-Z]").WithMessage("Şifre en az bir büyük harf içermelidir.")
+                //.Matches("[^a-zA-Z0-9]").WithMessage("Şifre en az bir özel işaret içermelidir.");
 
             RuleFor(x => x.ConfirmPassword)
                 .NotNull().WithMessage("Lütfen Şifrenizi Tekrar Giriniz.")
                 .NotEmpty().WithMessage("Lütfen Şifrenizi Tekrar Giriniz.")
-                .Equal(x => x.PasswordHash).WithMessage("Şifreler Uyuşmuyor");
+                .Equal(x => x.Password).WithMessage("Şifreler Uyuşmuyor");
 
         }
     }

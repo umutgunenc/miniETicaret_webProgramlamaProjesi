@@ -12,6 +12,7 @@ namespace miniETicaret.Models.ViewModel.Auth
     {
         private readonly eTicaretDBContext _eTicaretDBContext;
 
+        public string Password { get; set; }
         public string ConfirmPassword { get; set; }
 
 
