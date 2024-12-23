@@ -30,6 +30,44 @@ namespace miniETicaret.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            LoginValidator validator = new();
+            ValidationResult result = validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
+            }
+
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+
+
+            if (user == null)
+            {
+                ModelState.AddModelError("Password", "Kullanıcı adı veya şifre hatalı.");
+                return View(model);
+            }
+
+            //Sayfa Kapatılınca Oturum Kapatılır 
+            //Kullanıcı İstediği Kadar Yanlış Giriş Yapabilir
+            var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (!signInResult.Succeeded)
+            {
+                ModelState.AddModelError("Password", "Kullanıcı adı veya şifre hatalı.");
+                return View(model);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

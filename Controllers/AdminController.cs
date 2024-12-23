@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using miniETicaret.Data;
 using miniETicaret.Models.Entity;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace miniETicaret.Controllers
 {
+    [Authorize(Roles ="ADMIN")]
     public class AdminController : Controller
     {
         private readonly eTicaretDBContext _eTicaretDBContext;
