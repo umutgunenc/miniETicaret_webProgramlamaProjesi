@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using miniETicaret.Data;
+using miniETicaret.Middleware;
 using miniETicaret.Models.Entity;
 using System;
 
@@ -63,12 +64,13 @@ namespace miniETicaret
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseMiddleware<UserRoleMiddleware>(); //kullanıcı rollerini layouta almak için kullanılıyor
 
             app.UseEndpoints(endpoints =>
             {

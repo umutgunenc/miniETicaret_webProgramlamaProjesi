@@ -15,14 +15,65 @@
 <body class="bg-warning">
     @await Html.PartialAsync("_navbarPartialView")
 
+    @{
+        int userRoleId = 0;
+        if (Context.User.Identity.IsAuthenticated && Context.Items["UserRoleId"] != null)
+        {
+            userRoleId = (int)Context.Items["UserRoleId"];
+        }
+
+
+    }
+
 
     <div class="mt-3">
+        @if (userRoleId != 0)
+        {<div class="row mx-0">
+                <div class="col-md-2 p-0">
+                        @if (userRoleId == 1) // Admin 
+                        {
+                            @await Html.PartialAsync("_adminMenu")
+                            @await Html.PartialAsync("_custommerMenu")
+                        }
+                        else if (userRoleId == 2) // Seller 
+                        {
+                            @await Html.PartialAsync("_sellerMenu")
+                            @await Html.PartialAsync("_custommerMenu")
+                        }
+                        else if (userRoleId == 3) // Customer 
+                        {
+                            @await Html.PartialAsync("_custommerMenu")
+                        }
+                </div>
+
+                <div class="col-md-10 ps-3">
+                    @RenderBody()
+                    @await RenderSectionAsync("badRequest", false)
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row mx-2">
+                <div class="col-md-12 p-0">
+                    @RenderBody()
+                    @await RenderSectionAsync("badRequest", false)
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+
+
+    @*<div class="mt-3">
         @{
             var menuSection = IsSectionDefined("AdminMenu") ? "AdminMenu" :
                               IsSectionDefined("SellerMenu") ? "SellerMenu" :
                               IsSectionDefined("CustommerMenu") ? "CustommerMenu" : null;
         }
-
         @if (menuSection != null)
         {
             <div class="row mx-0">
@@ -30,7 +81,7 @@
                     @await RenderSectionAsync(menuSection)
                 </div>
                 <div class="col-md-10 ps-3">
-                    @await Html.PartialAsync("_seachBoxPartialView") 
+                    @await Html.PartialAsync("_seachBoxPartialView")
                     @RenderBody()
                 </div>
             </div>
@@ -44,7 +95,7 @@
                 </div>
             </div>
         }
-    </div>
+    </div>*@
 
 
     @RenderSection("Scripts", false)

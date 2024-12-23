@@ -1,10 +1,5 @@
 ﻿@model AddCategoryViewModel
 
-@section CustommerMenu {
-
-    @await Html.PartialAsync("_AdminMenu")
-}
-
 
 <form asp-action="AddCategory" asp-controller="Admin" method="post">
     <div class="input-group mb-3">
@@ -13,7 +8,7 @@
             <button class="btn btn-info" type="submit">Ekle</button>
         </div>
     </div>
-    <div class="input-group mb-3" >
+    <div class="input-group mb-3">
         <span class="font-weight-bold text-danger bg-light text-danger rounded d-block w-100" asp-validation-for="Name">
         </span>
     </div>
