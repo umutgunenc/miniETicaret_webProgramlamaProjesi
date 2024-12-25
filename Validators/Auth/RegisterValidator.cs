@@ -19,6 +19,7 @@ namespace miniETicaret.Validators.Auth
                 .NotEmpty().WithMessage("Lütfen Soyadınızı Giriniz.")
                 .MaximumLength(256).WithMessage("En Fazla 256 Karakter Uzunluğunda Soyad Girilebilir.");
 
+            //TODO BeUniqueEmailAdress fonksiyonu kontrol et, db ye ayni mail ile kayıt atılıyor
             RuleFor(x => x.Email)
                 .NotNull().WithMessage("Lütfen E-Mail Adresinizi Giriniz.")
                 .NotEmpty().WithMessage("Lütfen E-Mail Adresinizi Giriniz.")

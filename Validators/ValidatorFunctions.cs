@@ -3,6 +3,8 @@ using System.Threading;
 using miniETicaret.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace miniETicaret.Validators
 {
@@ -85,5 +87,32 @@ namespace miniETicaret.Validators
             return !_context.Users.Any(x => x.UserName.ToUpper() == userName.ToUpper());
 
         }
+
+        public static bool BeValidExtensionForPhoto(IFormFile file)
+        {
+            if (file == null)
+                return true;
+
+            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            string fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+            return allowedExtensions.Contains(fileExtension);
+        }
+
+        public static bool BeValidCategory(int id)
+        {
+            return _context.Categories.Any(x => x.Id == id && x.IsActive == true);
+        }
+
+        public static bool IsValidDecimal(string input)
+        {
+            return decimal.TryParse(input, out _);
+        }
+
+        public static bool IsValidInteger(string input)
+        {
+            return int.TryParse(input, out _);
+        }
+        
     }
 }
