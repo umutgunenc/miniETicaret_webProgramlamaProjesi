@@ -28,7 +28,6 @@ namespace miniETicaret.Controllers
         [HttpGet]
         public async Task<IActionResult> AddProduct()
         {
-
             AddProductViewModel model = new(_eTicaretDBContext);
             model.Categories = await model.GetCategoriesAsync();
             return View(model);
@@ -46,8 +45,6 @@ namespace miniETicaret.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-
-
 
                 return View(model);
             }
@@ -72,11 +69,10 @@ namespace miniETicaret.Controllers
 
             var productId = product.Id;
 
-
             // Fotoğraf uzantısını al
             var extension = Path.GetExtension(model.ProductPhoto.FileName);
 
-            // Dosyanın kaydedileceği yolu belirle
+            // Dosyanın yolunu belirle wwwroot altında images id.uzantı
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", $"{productId}{extension}");
 
             // Fotoğrafı kaydet
@@ -85,10 +81,10 @@ namespace miniETicaret.Controllers
                 await model.ProductPhoto.CopyToAsync(stream);
             }
 
-            // Fotoğraf URL'sini oluştur
+            // Fotoğraf URLsini oluştur
             var photoUrl = $"/Images/{productId}{extension}";
 
-            // Ürünün PhotoUrl alanına ekle
+            // Ürünü kaydederken product.ImgUrl = "empyt" olarak kaydedildi, bunu değiştir
             product.ImgUrl = photoUrl;
 
             // db yi güncelle
