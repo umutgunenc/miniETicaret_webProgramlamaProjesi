@@ -4,7 +4,6 @@ using miniETicaret.Models.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace miniETicaret.Models.ViewModel.Home
 {

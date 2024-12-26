@@ -1,0 +1,40 @@
+﻿@model ProductsDetailViewModel
+
+@if (TempData["ProductAddedToCart"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["ProductAddedToCart"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+<form asp-action="AddCart" asp-controller="Cart">
+    <div class="card mb-3">
+        <input type="hidden" asp-for="Id" />
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img src="@Model.ImgUrl" class="card-img" alt="@Model.Name">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title text-center font-weight-bold">@Model.Name</h5>
+                    <p class="card-text">@Model.Despriction</p>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <p class="font-weight-bold">Fiyat: @Model.Price ₺</p>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <input type="number" class="form-control w-25 mr-2" asp-for="Quantity" placeholder="Adet" min="1" value="">
+                        <button class="btn btn-primary">Sepete Ekle</button>
+                    </div>
+                    <div class="mt-3 text-right">
+                        <span class="font-weight-bold text-danger bg-light text-danger rounded" asp-validation-for="Quantity"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

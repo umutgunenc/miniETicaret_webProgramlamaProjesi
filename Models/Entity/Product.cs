@@ -14,7 +14,6 @@ namespace miniETicaret.Models.Entity
             ProductOrders = new HashSet<ProductOrder>();
         }
         public int Id { get; set; }
-
         public string Name { get; set; }
         public string Despriction { get; set; }
         public decimal Price { get; set; }

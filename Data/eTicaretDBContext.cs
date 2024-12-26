@@ -60,11 +60,20 @@ namespace miniETicaret.Data
                 .WithMany(o => o.ProductOrders)
                 .HasForeignKey(po => po.OrderId);
 
-            // Customer (AppUser) ve Cart arasındaki ilişkiyi tanımlama
-            // CustomerId ve ProductId birleşik anahtar olarak kullanılır
 
             modelBuilder.Entity<Cart>()
                 .HasKey(c => new { c.CustomerId, c.ProductId });
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.Customer) 
+                .WithMany()  
+                .HasForeignKey(c => c.CustomerId);  
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.Product)  
+                .WithMany()  
+                .HasForeignKey(c => c.ProductId);  
+
 
             #region DumpData
 

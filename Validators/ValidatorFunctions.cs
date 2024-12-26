@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using miniETicaret.Models.ViewModel.Seller;
+using miniETicaret.Models.ViewModel.Products;
 
 namespace miniETicaret.Validators
 {
@@ -17,7 +19,6 @@ namespace miniETicaret.Validators
                 return true;
             return !_context.Categories.Any(x => x.Name.ToUpper() == name.ToUpper());
         }
-
         /// <summary>
         /// Aynı isme sahip ve kendisi dışında başka bir kayıt olup olmadığını kontrol eder
         /// </summary>
@@ -30,12 +31,10 @@ namespace miniETicaret.Validators
                 return true;
             return !_context.Categories.Any(c => c.Name.ToUpper() == name.ToUpper() && c.Id != categoryId);
         }
-
         public static bool BeCategory(int id)
         {
             return _context.Categories.Any(x => x.Id == id);
         }
-
         public static bool BeUniqueEmailAdress(string eMail)
         {
 
@@ -43,7 +42,6 @@ namespace miniETicaret.Validators
                 return true;
             return !_context.Users.Any(x => x.Email.ToUpper() == eMail.ToUpper());
         }
-
         public static bool BeNumber(string TCKN)
         {
             if (string.IsNullOrEmpty(TCKN))
@@ -52,7 +50,6 @@ namespace miniETicaret.Validators
             return TCKN.All(c => c >= '0' && c <= '9');
 
         }
-
         public static bool BeUniqueTCKN(string TCKN)
         {
             if (string.IsNullOrEmpty(TCKN))
@@ -60,7 +57,6 @@ namespace miniETicaret.Validators
 
             return !_context.Users.Any(x => x.TCKN.ToUpper() == TCKN.ToUpper());
         }
-
         public static bool BeUniquePhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrEmpty(phoneNumber))
@@ -87,7 +83,6 @@ namespace miniETicaret.Validators
             return !_context.Users.Any(x => x.UserName.ToUpper() == userName.ToUpper());
 
         }
-
         public static bool BeValidExtensionForPhoto(IFormFile file)
         {
             if (file == null)
@@ -98,21 +93,29 @@ namespace miniETicaret.Validators
 
             return allowedExtensions.Contains(fileExtension);
         }
-
         public static bool BeValidCategory(int id)
         {
             return _context.Categories.Any(x => x.Id == id && x.IsActive == true);
         }
-
         public static bool IsValidDecimal(string input)
         {
             return decimal.TryParse(input, out _);
         }
-
         public static bool IsValidInteger(string input)
         {
             return int.TryParse(input, out _);
         }
-        
+        public static bool HasEnoughStock(ProductsDetailViewModel model, int quaintity)
+        {
+
+            var product = _context.Products.FirstOrDefault(p => p.Id == model.Id && p.IsActive);
+
+            if (product == null || product.StockCount < quaintity)
+                return false;
+
+            return true;
+        }
+
+
     }
 }
