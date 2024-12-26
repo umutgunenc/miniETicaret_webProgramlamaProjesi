@@ -72,6 +72,9 @@ namespace miniETicaret
             app.UseAuthorization();
             app.UseMiddleware<UserRoleMiddleware>(); //kullanıcı rollerini layouta almak için kullanılıyor
 
+            //TODO decimal ifadeler dbye küsüratlı bir sekilde kaydedilmiyor
+            //Kültür ayarları yapılacak
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

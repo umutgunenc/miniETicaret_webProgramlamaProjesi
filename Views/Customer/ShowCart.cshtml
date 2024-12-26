@@ -1,0 +1,56 @@
+﻿@model ShowCartViewModel
+
+
+<table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+            <th scope="col" style="width:5%">Seç</th>
+            <th scope="col" style="width:50%">Ürün Adı</th>
+            <th scope="col" style="width:15%">Adedi</th>
+            <th scope="col" style="width:15%">Birim Fiyatı</th>
+            <th scope="col" style="width:15%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cart in Model.Carts)
+        {
+            <tr>
+                <td>
+                    <div class="d-flex justify-content-center mt-2">
+                        <input type="checkbox" asp-for="IsActive" style="width:20px;height:20px" />
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex mt-2">
+                        @cart.ProductName
+                    </div>
+                </td>
+                <td>
+                    <input type="number" class="form-control mr-2" asp-for="@cart.Quantity" min="0">
+                </td>
+                <td>
+                    <div class="d-flex mt-2">
+                        @cart.ProductPrice
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <input type="hidden" asp-for="@cart.ProductId" />
+                        <button type="button" class="btn btn-danger" id="removeBtn">Sepetten Çıkart</button>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                <div class="d-flex justify-content-end align-items-center">
+                    <p id="totalPriceDisplay" class="font-weight-bold pt-3 mx-3">Toplam Ücret: JS ile seçili olanların fiyatları gelecek  // Adet Değişince Update Olacak ₺</p>
+                    <button type="submit" class="btn btn-primary" id="confirmBtn">Sipariş Ver</button>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
