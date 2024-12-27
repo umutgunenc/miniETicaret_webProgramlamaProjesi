@@ -36,6 +36,7 @@ namespace miniETicaret.Models.ViewModel.Customer
                 .Where(c => c.CustomerId == _user.Id)
                 .Select(c => new ShowCartViewModel
                 {
+                    ProductId = c.ProductId,
                     ProductName = c.Product.Name,
                     Quantity = c.Quantity,
                     ProductPrice = c.Product.Price,

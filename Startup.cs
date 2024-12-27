@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using miniETicaret.Data;
 using miniETicaret.Middleware;
 using miniETicaret.Models.Entity;
 using System;
+using System.Globalization;
 
 namespace miniETicaret
 {
@@ -68,12 +70,21 @@ namespace miniETicaret
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            // Kültür ayarlarını yapıldı decimal ifadelerde ondalıklı sayıyı almak için
+            var supportedCultures = new[] { new CultureInfo("en-US") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<UserRoleMiddleware>(); //kullanıcı rollerini layouta almak için kullanılıyor
 
-            //TODO decimal ifadeler dbye küsüratlı bir sekilde kaydedilmiyor
-            //Kültür ayarları yapılacak
 
             app.UseEndpoints(endpoints =>
             {
