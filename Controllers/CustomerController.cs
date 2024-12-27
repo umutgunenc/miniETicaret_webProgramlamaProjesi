@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace miniETicaret.Controllers
 {
     [Authorize]
-    public class CustomerController :Controller
+    public class CustomerController : Controller
     {
         private readonly eTicaretDBContext _eTicaretDBContext;
         private readonly UserManager<AppUser> _userManager;
@@ -28,11 +29,57 @@ namespace miniETicaret.Controllers
         {
             AppUser user = await _userManager.GetUserAsync(User);
 
-            ShowCartViewModel model = new(_eTicaretDBContext,user);
+            ShowCartViewModel model = new(_eTicaretDBContext, user);
 
             model.Carts = await model.GetChartDetailsAsync();
 
             return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowOrders()
+        {
+            AppUser customer = await _userManager.GetUserAsync(User);
+
+            var query = _eTicaretDBContext.Orders
+                .Where(o => o.CustomerId == customer.Id)
+                .Select(o => new ShowOrdersViewModel
+                {
+                    Id = o.Id,
+                    OrderTime = o.OrderTime,
+                    TotalPrice = o.TotalPrice
+                });
+
+            List<ShowOrdersViewModel> ordersViewModel = await query.ToListAsync();
+
+            return View(ordersViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowOrderDetail(int id)
+        {
+
+            AppUser customer = await _userManager.GetUserAsync(User);
+
+            var quertyOrderDetails = _eTicaretDBContext.OrderProducts
+                .Include(op => op.Product)
+                .Include(op => op.Seller)
+                .Include(op => op.Order)
+                .Where(op => op.OrderId == id && op.Order.CustomerId==customer.Id)
+                .Select(op => new ShowOrderDetailViewModel
+                {
+                    OrderDate = op.Order.OrderTime,
+                    SellerName = $"{op.Seller.Name} {op.Seller.SurName}",
+                    ProductName = op.Product.Name,
+                    ProductUnitPrice = op.ProductUnitPrice,
+                    Quantity = op.Quantity,
+                    TotalProductPrice = op.Quantity * op.ProductUnitPrice
+                });
+
+            var orderDetails = await quertyOrderDetails.ToListAsync();
+
+            return View(orderDetails);
         }
     }
 }

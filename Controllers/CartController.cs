@@ -171,7 +171,8 @@ namespace miniETicaret.Controllers
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
                     SellerId = product.SellerId,
-                    OrderId = order.Id
+                    OrderId = order.Id,
+                    ProductUnitPrice = product.Price
                 };
 
                 await _eTicaretDBContext.OrderProducts.AddAsync(productOrder);

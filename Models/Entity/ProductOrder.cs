@@ -4,6 +4,7 @@ namespace miniETicaret.Models.Entity
 {
     public class ProductOrder
     {
+
         [ForeignKey(nameof(ProductId))]
         public int ProductId { get; set; }
         public virtual Product Product { get; set; }
@@ -15,7 +16,7 @@ namespace miniETicaret.Models.Entity
         [ForeignKey(nameof(SellerId))]
         public int SellerId { get; set; }
         public virtual AppUser Seller { get; set; }
-
         public int Quantity { get; set; }
+        public decimal ProductUnitPrice { get; set; }
     }
 }

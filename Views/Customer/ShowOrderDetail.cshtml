@@ -1,0 +1,54 @@
+﻿@model List<ShowOrderDetailViewModel>
+
+<h2 class="text-center">Sipariş Detayları <i class="fa-solid fa-cart-shopping"></i></h2>
+<br />
+
+<table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+            <th scope="col" style="width:20%" class="text-center">Ürün Adı</th>
+            <th scope="col" style="width:20%" class="text-center">Satıcı</th>
+            <th scope="col" style="width:10%" class="text-center">Sipariş Tarihi</th>
+            <th scope="col" style="width:10%" class="text-center">Adedi</th>
+            <th scope="col" style="width:20%" class="text-center">Birim Fiyatı</th>
+            <th scope="col" style="width:20%" class="text-center">Toplam Fiyatı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.ProductName
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.SellerName
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.OrderDate.ToString("dd.MM.yyyy  HH:mm")
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.Quantity
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.ProductUnitPrice.ToString("0.00") ₺
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @product.TotalProductPrice.ToString("0.00") ₺
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
