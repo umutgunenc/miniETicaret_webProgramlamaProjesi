@@ -19,8 +19,6 @@ namespace miniETicaret.Models.Entity
         public decimal TotalPrice { get; set; }
         public AppUser Customer { get; set; }
         public int CustomerId { get; set; }
-        public AppUser Seller { get; set; }
-        public int SellerId { get; set; }
         
         public virtual ICollection<ProductOrder> ProductOrders { get; set; } 
 

@@ -14,7 +14,9 @@ namespace miniETicaret.Models.Entity
     {
         public AppUser()
         {
-
+            CustomerOrders = new HashSet<Order>();
+            SellerProducts = new HashSet<Product>();
+            SellerOrders = new HashSet<ProductOrder>();
         }
 
         public string TCKN { get; set; }
@@ -23,12 +25,11 @@ namespace miniETicaret.Models.Entity
         public bool IsActive { get; set; }
         public bool TermOfUse { get; set; }
         public string Address { get; set; }
-
-        public ICollection<Order> CustomerOrders { get; set; }
-        public ICollection<Order> SellerOrders { get; set; }
-
-        public virtual ICollection<Product> SellerProducts { get; set; }
         public Cart Cart { get; set; }
+        public virtual ICollection<Order> CustomerOrders { get; set; }
+        public virtual ICollection<Product> SellerProducts { get; set; }
+        public virtual ICollection<ProductOrder> SellerOrders { get; set; }
+
 
 
     }

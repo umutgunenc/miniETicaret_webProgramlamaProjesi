@@ -7,6 +7,7 @@ using miniETicaret.Models.Entity;
 using miniETicaret.Models.ViewModel.Products;
 using miniETicaret.Validators.Cart;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -103,64 +104,81 @@ namespace miniETicaret.Controllers
             }
             catch (Exception ex)
             {
-
                 return Json(new { success = false, message = ex.Message });
             }
-
-
         }
-
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCart(int productId, int newQuantity)
+        public async Task<IActionResult> ConfirmCart([FromBody] List<Cart> selectedItems)
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            if (selectedItems == null || !selectedItems.Any())
+                return Json(new { success = false, message = "Sepetinizde herhangi bir ürün yok." });
 
-            Cart cartItem = await _eTicaretDBContext.Carts
-                .Include(c => c.Product)
-                .FirstOrDefaultAsync(c => c.CustomerId == user.Id && c.ProductId == productId);
+            AppUser customer = await _userManager.GetUserAsync(User);
+            decimal totalPrice = 0;
 
-            if (cartItem == null)
-                return Json(new { success = false, message = "Sepet ürünü bulunamadı." });
 
-            int maxAvailableQuantity = cartItem.Product.StockCount + cartItem.Quantity;
-            if (newQuantity > maxAvailableQuantity)
+            foreach (var item in selectedItems)
             {
-                newQuantity = maxAvailableQuantity;
-                return Json(new
-                {
-                    success = false,
-                    message = $"Stok yetersiz. Mevcut stok: {cartItem.Product.StockCount}. Alabileceğiniz maksimum miktar: {newQuantity}.",
-                    newQuantity = newQuantity
-                });
+
+                Product product = await _eTicaretDBContext.Products
+                    .Where(p => p.Id == item.ProductId)
+                    .FirstOrDefaultAsync();
+
+                if (product == null)
+                    return Json(new { success = false, message = "Ürün bulunamadı." });
+
+                if (product.StockCount < item.Quantity)
+                    return Json(new { success = false, message = $"Sepetinizde Bulunan {product.Name} İsimli Ürünün Stoğu Yetersiz.\n\nEn Fazla {product.StockCount} Adet Satın Alabilirsiniz." });
+
+                totalPrice += item.Quantity * product.Price;
             }
 
-            int oldQuantity = cartItem.Quantity;
-            cartItem.Quantity = newQuantity;
-
-            // Stok miktarını güncelle
-            cartItem.Product.StockCount -= newQuantity - oldQuantity;
-
-            // Eğer stok 0'ın altına düşerse, kullanıcıya uyarı gönder
-            if (cartItem.Product.StockCount < 0)
+            Order order = new()
             {
-                cartItem.Product.StockCount = 0; // Stok sayısını 0'a çekiyoruz
-                return Json(new
-                {
-                    success = false,
-                    message = "Stok tükenmiş. Lütfen daha küçük bir miktar seçin.",
-                    newStock = cartItem.Product.StockCount
-                });
-            }
+                CustomerId = customer.Id,
+                OrderTime = DateTime.Now,
+                TotalPrice = totalPrice,
+                Despriction = customer.Name + " " + DateTime.Now.ToString("dd:MM:yyyy")
+            };
 
-            // Veritabanında güncellemeleri kaydet
-            _eTicaretDBContext.Update(cartItem);
-            _eTicaretDBContext.Update(cartItem.Product);
+            await _eTicaretDBContext.Orders.AddAsync(order);
             await _eTicaretDBContext.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Sepet güncellendi.", newStock = cartItem.Product.StockCount });
-        }
+            foreach (var item in selectedItems)
+            {
+                Product product = await _eTicaretDBContext.Products
+                    .Where(p => p.Id == item.ProductId)
+                    .FirstOrDefaultAsync();
 
+                Cart customerCart = await _eTicaretDBContext.Carts
+                    .Where(c => c.ProductId == product.Id && c.CustomerId == customer.Id)
+                    .FirstOrDefaultAsync();
+
+                _eTicaretDBContext.Carts.Remove(customerCart);
+                await _eTicaretDBContext.SaveChangesAsync();
+
+                product.StockCount -= item.Quantity;
+                _eTicaretDBContext.Update(product);
+                await _eTicaretDBContext.SaveChangesAsync();
+
+
+                ProductOrder productOrder = new()
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    SellerId = product.SellerId,
+                    OrderId = order.Id
+                };
+
+                await _eTicaretDBContext.OrderProducts.AddAsync(productOrder);
+                await _eTicaretDBContext.SaveChangesAsync();
+
+
+            }
+
+            return Json(new { success = true, message = "Sipariş başarıyla verildi!" });
+        }
 
     }
 }

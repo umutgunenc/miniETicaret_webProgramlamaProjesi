@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using miniETicaret.Data;
 
 namespace miniETicaret.Migrations
 {
     [DbContext(typeof(eTicaretDBContext))]
-    partial class eTicaretDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241227135636_mig4")]
+    partial class mig4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,19 +164,19 @@ namespace miniETicaret.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "e28c84ba-2d0f-41da-a106-7178eb198d4b",
+                            ConcurrencyStamp = "c54c9fcd-1981-4eed-8f55-a0765a4f42ce",
                             Name = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "b9fff554-cde4-4218-9612-4c22c32d102f",
+                            ConcurrencyStamp = "c99c0638-013f-406e-b655-af15245b5193",
                             Name = "SELLER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "5d6485d3-4ac9-4d67-bff2-a4c87b380021",
+                            ConcurrencyStamp = "4fa67c48-2588-4e9d-8a0e-9c6e342a0de3",
                             Name = "CUSTOMER"
                         });
                 });
@@ -275,7 +277,7 @@ namespace miniETicaret.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Address = "Istanbul",
-                            ConcurrencyStamp = "c4f88e59-a404-443f-b2f1-2a8ecfb071bc",
+                            ConcurrencyStamp = "8a965ece-8fd2-465c-b1e0-efda50883f1e",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             IsActive = true,
@@ -283,10 +285,10 @@ namespace miniETicaret.Migrations
                             Name = "ADMIN",
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPn2AHhpmaXReL7GUdzRQ2BBw0OG/Szj9wn3lSg08lDwOp+I7uU72tL5MagX4u5u4A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPdQTxzTpJGYtuisy+w9AVEblhnXOcLTHcDBX7hGJ1z7ClqQLGw3h6rm1mnoLCj4xQ==",
                             PhoneNumber = "+905300000000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ae091175-43ff-401e-8357-a881658c5f0b",
+                            SecurityStamp = "068fac10-68d0-4e7b-8336-867d6ea9481d",
                             SurName = "ADMIN",
                             TCKN = "12345678901",
                             TermOfUse = true,
@@ -298,7 +300,7 @@ namespace miniETicaret.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Address = "Ankara",
-                            ConcurrencyStamp = "868be387-cba6-41ad-8f47-ed5ee48b1907",
+                            ConcurrencyStamp = "207ddf6a-aadc-48f3-ba4a-acef399f74f9",
                             Email = "seller@gmail.com",
                             EmailConfirmed = false,
                             IsActive = true,
@@ -306,10 +308,10 @@ namespace miniETicaret.Migrations
                             Name = "SELLER",
                             NormalizedEmail = "SELLER@GMAIL.COM",
                             NormalizedUserName = "SELLER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEASK/kq3p3Q/FqotTie8SxVQ0bXAR38Yb6X61gtLWg0eae9u4oTwmico1ExfJkInFg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGKHmdDLIPlUy+ZxvZeHKjr2B03MTqUXdApZnrhPYe1+gylotS5/e/dTdoyb5JL4zA==",
                             PhoneNumber = "+905300000001",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8e9ed056-5b39-4212-b13d-7f721b1f5bdc",
+                            SecurityStamp = "061f84e2-a1f5-4e9d-ba60-d4ac95ef628c",
                             SurName = "SELLER",
                             TCKN = "12345678902",
                             TermOfUse = true,
@@ -321,7 +323,7 @@ namespace miniETicaret.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Address = "İzmir",
-                            ConcurrencyStamp = "e15088a1-c22f-4cfd-a29c-6049adb08a63",
+                            ConcurrencyStamp = "e888d0e3-39b0-4b99-b1e8-6aeb1a7e7540",
                             Email = "customer@gmail.com",
                             EmailConfirmed = false,
                             IsActive = true,
@@ -329,10 +331,10 @@ namespace miniETicaret.Migrations
                             Name = "CUSTOMER",
                             NormalizedEmail = "CUSTOMER@GMAIL.COM",
                             NormalizedUserName = "CUSTOMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIU3zBeZVTNhqwmHs9zu5SEIPdlRGAPuuRszDwZHsLJBlvQYSp96fXzqtx/XLHsfAg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBJ6KpSpVFhY/DsbXQxPkcNshJvX6QpfFHGQlS2+wkqsOvke4AJaHUR+t7M5ykvqZg==",
                             PhoneNumber = "+905300000002",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3ec29e8a-e674-4782-82d8-1615cbf311c8",
+                            SecurityStamp = "b5a12672-c31b-4d5f-b601-09ab19057861",
                             SurName = "CUSTOMER",
                             TCKN = "12345678903",
                             TermOfUse = true,
@@ -394,12 +396,17 @@ namespace miniETicaret.Migrations
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("SellerId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("SellerId");
 
                     b.ToTable("Orders");
                 });
@@ -451,17 +458,12 @@ namespace miniETicaret.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductId", "OrderId", "SellerId");
+                    b.HasKey("ProductId", "OrderId");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("SellerId");
 
                     b.ToTable("OrderProducts");
                 });
@@ -553,7 +555,15 @@ namespace miniETicaret.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("miniETicaret.Models.Entity.AppUser", "Seller")
+                        .WithMany("SellerOrders")
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("miniETicaret.Models.Entity.Product", b =>
@@ -586,20 +596,12 @@ namespace miniETicaret.Migrations
                     b.HasOne("miniETicaret.Models.Entity.Product", "Product")
                         .WithMany("ProductOrders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("miniETicaret.Models.Entity.AppUser", "Seller")
-                        .WithMany("SellerOrders")
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("miniETicaret.Models.Entity.AppUser", b =>

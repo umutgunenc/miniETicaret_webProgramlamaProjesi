@@ -11,5 +11,11 @@ namespace miniETicaret.Models.Entity
         [ForeignKey(nameof(OrderId))]
         public int OrderId { get; set; }
         public virtual Order Order { get; set; }
+
+        [ForeignKey(nameof(SellerId))]
+        public int SellerId { get; set; }
+        public virtual AppUser Seller { get; set; }
+
+        public int Quantity { get; set; }
     }
 }

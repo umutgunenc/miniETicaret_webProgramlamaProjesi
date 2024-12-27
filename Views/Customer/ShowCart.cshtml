@@ -1,5 +1,4 @@
-﻿@model ShowCartViewModel
-
+﻿<!-- Sepet Tablosu ve Modal -->
 <table class="table table-bordered table-dark">
     <thead>
         <tr>
@@ -46,14 +45,51 @@
             <td colspan="5">
                 <div class="d-flex justify-content-end align-items-center">
                     <p id="totalPriceDisplay" class="font-weight-bold pt-3 mx-3">Toplam Ücret: 0 ₺</p>
-                    <button type="submit" class="btn btn-primary" id="confirmBtn">Sipariş Ver</button>
+                    <button type="button" class="btn btn-primary" id="confirmBtn">Sipariş Ver</button>
                 </div>
             </td>
         </tr>
     </tfoot>
 </table>
 
+
+<div class="modal fade" id="orderConfirmationModal" tabindex="-1" aria-labelledby="orderConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderConfirmationModalLabel">Siparişi Onayla</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Adet</th>
+                            <th>Birim Fiyatı</th>
+                            <th>Toplam Fiyat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderItemsList">
+                    </tbody>
+                </table>
+                <p><strong>Toplam Ücret: <span id="modalTotalPrice">0 ₺</span></strong></p>
+                <p>Sipariş vermek istiyor musunuz?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalBtn">Hayır</button>
+                <button type="button" class="btn btn-primary"  data-dismiss="modal" id="confirmOrderBtn">Evet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
+
+
     <script>
         $(document).ready(function () {
             function calculateTotalPrice() {
@@ -72,12 +108,87 @@
                 $("#totalPriceDisplay").text(`Toplam Ücret: ${totalPrice.toFixed(2)} ₺`);
             }
 
-            $('.cart-checkbox').on('change', function () {
+            $(document).on('change', '.cart-checkbox', function () {
                 calculateTotalPrice();
             });
 
-            $('.quantity-input').on('change', function () {
+            $(document).on('input', '.quantity-input', function () {
                 calculateTotalPrice();
+            });
+
+            $("#confirmBtn").on("click", function () {
+                let selectedItems = [];
+                let totalPrice = 0;
+
+                $("tbody tr").each(function () {
+                    const isChecked = $(this).find('.cart-checkbox').is(":checked");
+                    const quantity = parseInt($(this).find('.quantity-input').val()) || 0;
+                    if (isChecked && quantity > 0) { 
+                        const productName = $(this).find('td:nth-child(2)').text().trim();
+                        const price = parseFloat($(this).find('.product-price').data('product-price').toString().replace(',', '.')) || 0;
+                        const itemTotal = quantity * price;
+
+                        selectedItems.push({
+                            productName: productName,
+                            quantity: quantity,
+                            price: price,
+                            itemTotal: itemTotal
+                        });
+
+                        totalPrice += itemTotal;
+                    }
+                });
+
+                $("#orderItemsList").empty();
+                selectedItems.forEach(function (item) {
+                    $("#orderItemsList").append(`
+                    <tr>
+                        <td>${item.productName}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price.toFixed(2)} ₺</td>
+                        <td>${item.itemTotal.toFixed(2)} ₺</td>
+                    </tr>
+                `);
+                });
+
+                $("#modalTotalPrice").text(totalPrice.toFixed(2) + " ₺");
+                $("#orderConfirmationModal").modal("show");
+            });
+
+            $("#confirmOrderBtn").on("click", function () {
+                let selectedItems = [];
+                $("tbody tr").each(function () {
+                    const isChecked = $(this).find('.cart-checkbox').is(":checked");
+                    const quantity = parseInt($(this).find('.quantity-input').val()) || 0;
+
+                    if (isChecked && quantity > 0) {
+                        const productName = $(this).find('td:nth-child(2)').text().trim();
+                        const price = parseFloat($(this).find('.product-price').data('product-price').toString().replace(',', '.')) || 0;
+
+                        selectedItems.push({
+                            productId: $(this).data('product-id'),
+                            quantity: quantity,
+                        });
+                    }
+                });
+
+                $.ajax({
+                    url: '/Cart/ConfirmCart',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedItems),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Sipariş başarıyla verildi!");
+                            $("#orderConfirmationModal").modal('hide');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                    }
+                });
             });
 
             $('.remove-btn').on('click', function () {
@@ -87,7 +198,7 @@
 
                 if (confirm(`"${productName}" adlı ürünü sepetinizden çıkartıyorsunuz. Emin misiniz?`)) {
                     $.ajax({
-                        url: '/Cart/RemoveFromCart',  
+                        url: '/Cart/RemoveFromCart',
                         type: 'POST',
                         data: {
                             productId: productId
@@ -95,7 +206,7 @@
                         success: function (response) {
                             if (response.success) {
                                 productRow.remove();
-                                calculateTotalPrice(); 
+                                calculateTotalPrice();
                             } else {
                                 alert(response.message);
                             }
@@ -109,5 +220,7 @@
 
             calculateTotalPrice();
         });
+
+
     </script>
 }

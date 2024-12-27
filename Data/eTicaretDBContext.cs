@@ -26,53 +26,95 @@ namespace miniETicaret.Data
 
 
         // n-n tablolar
-        public virtual DbSet<ProductOrder> OrderProducts { get; set; } // Örnek n-n ilişki tablosu
+        public virtual DbSet<ProductOrder> OrderProducts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // AppUser - Order ilişkisini yapılandırma
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Customer)  // Bir siparişin bir müşterisi (AppUser) olacak
-                .WithMany(u => u.CustomerOrders)  // Bir müşteri birden fazla siparişe sahip olabilir
-                .HasForeignKey(o => o.CustomerId)  // Foreign Key
-                .OnDelete(DeleteBehavior.Cascade);  // Müşteri silindiğinde ilgili siparişler de silinir
+                    .HasOne(o => o.Customer)
+                    .WithMany(u => u.CustomerOrders)
+                    .HasForeignKey(o => o.CustomerId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Seller)  // Bir siparişin bir satıcısı (AppUser) olacak
-                .WithMany(u => u.SellerOrders)  // Bir satıcı birden fazla siparişe sahip olabilir
-                .HasForeignKey(o => o.SellerId)  // Foreign Key
-                .OnDelete(DeleteBehavior.Restrict);  // Satıcı silindiğinde siparişler silinemez
-
-            // Order ve Product arasındaki ilişki (n-n) - OrderProduct
             modelBuilder.Entity<ProductOrder>()
-                .HasKey(po => new { po.ProductId, po.OrderId });  // Birleştirilmiş anahtar
+                .HasKey(po => new { po.ProductId, po.OrderId, po.SellerId });
 
             modelBuilder.Entity<ProductOrder>()
                 .HasOne(po => po.Product)
                 .WithMany(p => p.ProductOrders)
-                .HasForeignKey(po => po.ProductId);
+                .HasForeignKey(po => po.ProductId)
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi olmasın
 
             modelBuilder.Entity<ProductOrder>()
                 .HasOne(po => po.Order)
                 .WithMany(o => o.ProductOrders)
-                .HasForeignKey(po => po.OrderId);
+                .HasForeignKey(po => po.OrderId)
+                .OnDelete(DeleteBehavior.Cascade); // Sipariş silindiğinde ilişkili ürün siparişlerini siler
+
+            modelBuilder.Entity<ProductOrder>()
+                .HasOne(po => po.Seller)
+                .WithMany(s => s.SellerOrders)
+                .HasForeignKey(po => po.SellerId)
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi olmasın
+
+            //// AppUser ve Order arasındaki ilişkiyi tanımlıyoruz
+            //modelBuilder.Entity<Order>()
+            //    .HasOne(o => o.Customer)
+            //    .WithMany(u => u.CustomerOrders)
+            //    .HasForeignKey(o => o.CustomerId)
+            //    .OnDelete(DeleteBehavior.Cascade); // Sipariş silindiğinde müşteri siparişlerini siler
+
+            //// Product ve AppUser arasındaki ilişkiyi tanımlıyoruz
+            //modelBuilder.Entity<Product>()
+            //    .HasOne(p => p.Seller)
+            //    .WithMany(u => u.SellerProducts)
+            //    .HasForeignKey(p => p.SellerId)
+            //    .OnDelete(DeleteBehavior.Cascade); // Ürün silindiğinde satıcı ürünlerini siler
+
+            //// Product ve Category arasındaki ilişkiyi tanımlıyoruz
+            //modelBuilder.Entity<Product>()
+            //    .HasOne(p => p.Category)
+            //    .WithMany(c => c.Products)
+            //    .HasForeignKey(p => p.CategoryId)
+            //    .OnDelete(DeleteBehavior.Restrict); // Kategori silindiğinde ürünler silinmesin
+
+            //// Order ve Product arasındaki ilişki (n-n) - OrderProduct
+            //modelBuilder.Entity<ProductOrder>()
+            //    .HasKey(po => new { po.ProductId, po.OrderId });  // Birleştirilmiş anahtar
+
+            //modelBuilder.Entity<ProductOrder>()
+            //    .HasOne(po => po.Product)
+            //    .WithMany(p => p.ProductOrders)
+            //    .HasForeignKey(po => po.ProductId);
+
+            //modelBuilder.Entity<ProductOrder>()
+            //    .HasOne(po => po.Order)
+            //    .WithMany(o => o.ProductOrders)
+            //    .HasForeignKey(po => po.OrderId);
+
+            //// ProductOrder ile Seller ilişkisini yapılandırma
+            //modelBuilder.Entity<ProductOrder>()
+            //    .HasOne(po => po.Seller)  // Her ürünün bir satıcısı olacak
+            //    .WithMany(u => u.ProductOrders)  // Bir satıcı birden fazla ürüne sahip olabilir
+            //    .HasForeignKey(po => po.SellerId);
+
 
 
             modelBuilder.Entity<Cart>()
-                .HasKey(c => new { c.CustomerId, c.ProductId });
+                    .HasKey(c => new { c.CustomerId, c.ProductId });
 
             modelBuilder.Entity<Cart>()
-                .HasOne(c => c.Customer) 
-                .WithMany()  
-                .HasForeignKey(c => c.CustomerId);  
+                .HasOne(c => c.Customer)
+                .WithMany()
+                .HasForeignKey(c => c.CustomerId);
 
             modelBuilder.Entity<Cart>()
-                .HasOne(c => c.Product)  
-                .WithMany()  
-                .HasForeignKey(c => c.ProductId);  
+                .HasOne(c => c.Product)
+                .WithMany()
+                .HasForeignKey(c => c.ProductId);
 
 
             #region DumpData
@@ -87,9 +129,9 @@ namespace miniETicaret.Data
             {
                 Id = 1,
                 UserName = "admin",
-                NormalizedUserName="ADMIN",
+                NormalizedUserName = "ADMIN",
                 Email = "admin@gmail.com",
-                NormalizedEmail="ADMIN@GMAIL.COM",
+                NormalizedEmail = "ADMIN@GMAIL.COM",
                 Name = "ADMIN",
                 SurName = "ADMIN",
                 TCKN = "12345678901",
@@ -105,9 +147,9 @@ namespace miniETicaret.Data
             {
                 Id = 2,
                 UserName = "seller",
-                NormalizedUserName="SELLER",
+                NormalizedUserName = "SELLER",
                 Email = "seller@gmail.com",
-                NormalizedEmail="SELLER@GMAIL.COM",
+                NormalizedEmail = "SELLER@GMAIL.COM",
                 Name = "SELLER",
                 SurName = "SELLER",
                 TCKN = "12345678902",
@@ -123,9 +165,9 @@ namespace miniETicaret.Data
             {
                 Id = 3,
                 UserName = "customer",
-                NormalizedUserName="CUSTOMER",
+                NormalizedUserName = "CUSTOMER",
                 Email = "customer@gmail.com",
-                NormalizedEmail="CUSTOMER@GMAIL.COM",
+                NormalizedEmail = "CUSTOMER@GMAIL.COM",
                 Name = "CUSTOMER",
                 SurName = "CUSTOMER",
                 TCKN = "12345678903",
@@ -136,12 +178,12 @@ namespace miniETicaret.Data
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
             customerUser.PasswordHash = passwordHasher.HashPassword(customerUser, "qweqweqwe");
-            
+
             modelBuilder.Entity<AppRole>()
                 .HasData(admin, seller, customer);
 
             modelBuilder.Entity<AppUser>()
-                .HasData(adminUser,sellerUser, customerUser);
+                .HasData(adminUser, sellerUser, customerUser);
 
             modelBuilder.Entity<IdentityUserRole<int>>()
                 .HasData(
