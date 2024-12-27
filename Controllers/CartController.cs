@@ -140,7 +140,7 @@ namespace miniETicaret.Controllers
                 CustomerId = customer.Id,
                 OrderTime = DateTime.Now,
                 TotalPrice = totalPrice,
-                Despriction = $"{customer.Name} {customer.SurName} -- {DateTime.Now.ToString("dd:MM:yyyy")}"
+                Despriction = $"{customer.Name} {customer.SurName} -- {DateTime.Now.ToString("mm:HH dd:MM:yyyy")}"
             };
 
             await _eTicaretDBContext.Orders.AddAsync(order);
