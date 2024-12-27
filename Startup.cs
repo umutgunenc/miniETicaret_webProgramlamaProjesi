@@ -1,8 +1,10 @@
 ﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +52,21 @@ namespace miniETicaret
                 .AddEntityFrameworkStores<eTicaretDBContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            //Erişim izni reddedildiğinde yönlendirilecek sayfa belirlendi
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Auth/Login";
+                options.AccessDeniedPath = "/Error/AccessDenied";
+            });
+
 
         }
 
@@ -57,15 +74,13 @@ namespace miniETicaret
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -84,6 +99,7 @@ namespace miniETicaret
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<UserRoleMiddleware>(); //kullanıcı rollerini layouta almak için kullanılıyor
+            app.UseStatusCodePagesWithReExecute("/Error/Status", "?code={0}");
 
 
             app.UseEndpoints(endpoints =>

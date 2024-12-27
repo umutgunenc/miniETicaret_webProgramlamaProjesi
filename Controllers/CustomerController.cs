@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using miniETicaret.Data;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace miniETicaret.Controllers
 {
+    [Authorize]
     public class CustomerController :Controller
     {
         private readonly eTicaretDBContext _eTicaretDBContext;

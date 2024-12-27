@@ -1,0 +1,44 @@
+﻿@{
+    var seconds = 5;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="alert alert-danger text-center">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Erişim Reddedildi</h2>
+                <p>Bu sayfayı görüntüleme izniniz yok.</p>
+                <p>
+                    <span >Yönlendiriliyorsunuz, lütfen bekleyin...</span>
+                    <br />
+                    <span id="seconds" class="font-weight-bold text-danger">@seconds</span> saniye sonra ana sayfaya yönlendirileceksiniz.
+                </p>
+
+                <p class="mt-3">
+                    Beklemek istemiyorsanız, <a href="@Url.Action("Index", "Home")" class="font-weight-bold text-dark">buraya tıklayabilirsiniz.
+                    </a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    
+<script>
+    var countdownElement = document.getElementById("seconds");
+    var time = @seconds; 
+
+    // Geri sayımı başlat
+    var timer = setInterval(function() {
+        time--;
+        countdownElement.innerText = time; 
+        if (time <= 0) {
+            clearInterval(timer);
+            window.location.href = '@Url.Action("Index", "Home")'; 
+        }
+    }, 1000); 
+</script>
+
+ }
+

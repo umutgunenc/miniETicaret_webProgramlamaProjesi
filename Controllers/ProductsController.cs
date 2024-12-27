@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using miniETicaret.Data;
 using miniETicaret.Models.ViewModel.Products;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace miniETicaret.Controllers
 {
+
+    [AllowAnonymous]
     public class ProductsController : Controller
     {
         private readonly eTicaretDBContext _eTicaretDBContext;
