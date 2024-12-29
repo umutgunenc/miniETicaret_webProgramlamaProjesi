@@ -8,6 +8,7 @@ using miniETicaret.Models.Entity;
 using miniETicaret.Models.ViewModel.Seller;
 using miniETicaret.Validators.Seller;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace miniETicaret.Controllers
@@ -93,6 +94,37 @@ namespace miniETicaret.Controllers
 
             TempData["ProductAdded"] = $"{product.Name} isimli ürün başarı ile kaydedildi.";
             return RedirectToAction("AddProduct");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowSoldProducts()
+        {
+
+            AppUser seller = await _userManager.GetUserAsync(User);
+
+            var query = _eTicaretDBContext.OrderProducts
+                .Where(op => op.SellerId == seller.Id)
+                .Include(op => op.Product)
+                .Include(op => op.Order)
+                    .ThenInclude(o => o.Customer)
+                .Select(op => new ShowSoldProductsViewModel
+                {
+                    CustomerNameSurname = $"{op.Order.Customer.Name} {op.Order.Customer.SurName}",
+                    CustomerAdress = op.Order.Customer.Address,
+                    ProductName = op.Product.Name,
+                    ProductUnitPrice = op.ProductUnitPrice,
+                    ProductId = op.ProductId,
+                    Quantity = op.Quantity,
+                    TotalPrice = op.Quantity * op.ProductUnitPrice,
+                    OrderDate = op.Order.OrderTime
+                })
+                .OrderByDescending(op=>op.OrderDate);
+
+            var soldProducts = await query.ToListAsync();
+
+            return View(soldProducts);
+
         }
     }
 }

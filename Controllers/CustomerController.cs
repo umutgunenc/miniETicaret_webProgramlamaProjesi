@@ -72,6 +72,7 @@ namespace miniETicaret.Controllers
                     OrderDate = op.Order.OrderTime,
                     SellerName = $"{op.Seller.Name} {op.Seller.SurName}",
                     ProductName = op.Product.Name,
+                    ProductId = op.ProductId,
                     ProductUnitPrice = op.ProductUnitPrice,
                     Quantity = op.Quantity,
                     TotalProductPrice = op.Quantity * op.ProductUnitPrice

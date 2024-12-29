@@ -1,0 +1,63 @@
+﻿@model List<ShowSoldProductsViewModel>
+
+<h2 class="text-center">Satışlarım <i class="fa-solid fa-circle-dollar-to-slot"></i></h2>
+<br />
+
+<table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+            <th scope="col" style="width:15%" class="text-center">Sipariş Tarihi</th>
+            <th scope="col" style="width:15%" class="text-center">Alıcı Ad Soyad</th>
+            <th scope="col" style="width:35%" class="text-center">Alıcı Adresi</th>
+            <th scope="col" style="width:10%" class="text-center">Ürün Adı</th>
+            <th scope="col" style="width:5%" class="text-center">Adedi</th>
+            <th scope="col" style="width:10%" class="text-center">Birim Fiyatı</th>
+            <th scope="col" style="width:10%" class="text-center">Toplam Fiyatı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.OrderDate.ToString("dd.MM.yyyy  HH:mm")
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.CustomerNameSurname
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.CustomerAdress
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center" 
+                         style="cursor: pointer;"
+                         onclick="window.location.href='/Products/Detail/@item.ProductId'">
+                        @item.ProductName
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.Quantity
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.ProductUnitPrice ₺
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center mt-2 text-center">
+                        @item.TotalPrice ₺
+                    </div>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
