@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using miniETicaret.Data;
 using miniETicaret.Models.Entity;
+using miniETicaret.Models.ViewModel.Account;
 using miniETicaret.Models.ViewModel.Auth;
 using miniETicaret.Validators.Auth;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -176,12 +178,6 @@ namespace miniETicaret.Controllers
 
             TempData["RegisterCompleted"] = $"{model.UserName} kullanıcı adıyla yeni bir hesap oluşturuldu.";
 
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult ForgotPassword()
-        {
             return View();
         }
     }
