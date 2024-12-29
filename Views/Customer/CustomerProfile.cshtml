@@ -1,0 +1,18 @@
+﻿@model miniETicaret.Models.ViewModel.Customer.CustomerProfileViewModel
+
+<div class="container mt-4">
+	<h2 class="text-center">Müşteri Bilgileri</h2>
+	<div class="card mb-4">
+		<div class="card-header">
+			<h4>Bilgilerim</h4>
+		</div>
+		<div class="card-body">
+			<p><strong>Ad Soyad:</strong> @Model.FullName</p>
+			<p><strong>TCKN:</strong> @Model.TCKN</p>
+			<p><strong>E-Posta:</strong> @Model.Email</p>
+			<p><strong>Telefon:</strong> @Model.PhoneNumber</p>
+			<p><strong>Adres:</strong> @Model.Address</p>
+			<p><strong>Durum:</strong> @(Model.IsActive ? "Aktif" : "Pasif")</p>
+		</div>
+	</div>
+</div>

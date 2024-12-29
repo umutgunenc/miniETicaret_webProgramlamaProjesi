@@ -81,5 +81,30 @@ namespace miniETicaret.Controllers
 
             return View(orderDetails);
         }
+
+        // Müşteri Profilini Görüntüleme
+        [HttpGet]
+        public async Task<IActionResult> CustomerProfile()
+        {
+            // Kullanıcı bilgilerini al
+            AppUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account"); // Kullanıcı oturum açmamışsa yönlendir
+            }
+
+            // Profil ViewModel'ini oluştur
+            var model = new CustomerProfileViewModel
+            {
+                FullName = $"{user.Name} {user.SurName}",
+                TCKN = user.TCKN,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                IsActive = user.IsActive
+            };
+
+            return View(model);
+        }
     }
 }
