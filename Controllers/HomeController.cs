@@ -26,6 +26,31 @@ namespace miniETicaret.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var products = await _eTicaretDBContext.Products
+                .Where(p => p.Name.ToLower().Contains(searchQuery.ToLower()) && p.IsActive)
+                .Select(p => new Models.ViewModel.Products.ProductViewModel
+	            {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    StockCount = p.StockCount,
+                    ImgUrl = p.ImgUrl
+                })
+                .ToListAsync();
+
+
+            return View("SearchResults", products);
+        }
+
+
 
     }
 }
