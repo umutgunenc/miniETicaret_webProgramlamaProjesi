@@ -26,64 +26,69 @@ namespace miniETicaret.Controllers
             _userManager = userManager;
         }
 
+        
+
         [HttpPost]
-        public async Task<IActionResult> AddCart(ProductsDetailViewModel model)
+        public async Task<IActionResult> AddCart(int id, int quantity)
         {
-            CartValidor validator = new();
-            ValidationResult result = validator.Validate(model);
+            // Kullanıcıyı al
+            AppUser user = await _userManager.GetUserAsync(User);
 
-            if (!result.IsValid)
+            // Ürünü al ve stok kontrolü yap
+            Product product = await _eTicaretDBContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
             {
-                foreach (var errors in result.Errors)
-                {
-                    ModelState.AddModelError("", errors.ErrorMessage);
-                }
-
-                ProductsDetailViewModel returnModel = new(_eTicaretDBContext);
-                returnModel = await returnModel.GetProductsDetailViewModelAsync(model.Id);
-
-                return View("~/Views/Products/Detail.cshtml", returnModel);
+                return Json(new { success = false, message = "Ürün bulunamadı." });
             }
 
-            AppUser user = await _userManager.GetUserAsync(User);
-            Cart userCartItem = await _eTicaretDBContext.Carts
-                .Where(c => c.CustomerId == user.Id && c.ProductId == model.Id)
-                .FirstOrDefaultAsync();
-
-            //int quantityForTotalStock = model.Quantity;
-
-            //if (userCartItem != null)
-            //    model.Quantity += userCartItem.Quantity;
-
-
-            //product.StockCount -= quantityForTotalStock;
-            //_eTicaretDBContext.Update(product);
-
-            //await _eTicaretDBContext.SaveChangesAsync();
-
-            if (userCartItem != null)
+            // Stok kontrolü
+            if (quantity > product.StockCount)
             {
-                userCartItem.Quantity += model.Quantity;
-                _eTicaretDBContext.Update(userCartItem);
+                return Json(new
+                {
+                    success = false,
+                    message = $"Yetersiz stok. Mevcut stok: {product.StockCount}"
+                });
+            }
+
+            // Sepette aynı ürün var mı kontrol et
+            Cart cartItem = await _eTicaretDBContext.Carts
+                .FirstOrDefaultAsync(c => c.CustomerId == user.Id && c.ProductId == id);
+
+            if (cartItem != null)
+            {
+                // Miktarı artır ve stok düşür
+                if (cartItem.Quantity + quantity > product.StockCount)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = $"Bu ürün için maksimum eklenebilir miktar: {product.StockCount - cartItem.Quantity}"
+                    });
+                }
+
+                cartItem.Quantity += quantity;
+                product.StockCount -= quantity;
+                _eTicaretDBContext.Update(cartItem);
             }
             else
             {
-                Cart cart = new();
-                Product product = await _eTicaretDBContext.Products
-                     .FirstOrDefaultAsync(p => p.Id == model.Id);
-                cart.ProductId = product.Id;
-                cart.Quantity = model.Quantity;
-                cart.CustomerId = user.Id;
-                await _eTicaretDBContext.Carts.AddAsync(cart);
+                // Yeni bir sepet öğesi oluştur
+                Cart newCart = new()
+                {
+                    CustomerId = user.Id,
+                    ProductId = id,
+                    Quantity = quantity
+                };
+                product.StockCount -= quantity;
+                await _eTicaretDBContext.Carts.AddAsync(newCart);
             }
 
+            // Veritabanı değişikliklerini kaydet
+            _eTicaretDBContext.Update(product);
             await _eTicaretDBContext.SaveChangesAsync();
 
-
-            TempData["ProductAddedToCart"] = "Ürün sepetinize başarıyla eklendi.";
-
-            return RedirectToAction("Detail", "Products", new { id = model.Id });
-
+            return Json(new { success = true, message = "Ürün sepete başarıyla eklendi!" });
         }
 
         [HttpPost]
