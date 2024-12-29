@@ -88,10 +88,11 @@ namespace miniETicaret.Controllers
         {
             // Kullanıcı bilgilerini al
             AppUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account"); // Kullanıcı oturum açmamışsa yönlendir
-            }
+
+            //if (user == null)
+            //{
+            //    return RedirectToAction("Login", "Account"); // Kullanıcı oturum açmamışsa yönlendir
+            //}
 
             // Profil ViewModel'ini oluştur
             var model = new CustomerProfileViewModel

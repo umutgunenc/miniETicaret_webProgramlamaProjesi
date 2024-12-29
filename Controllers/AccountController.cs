@@ -33,15 +33,11 @@ namespace miniETicaret.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return Json(new { success = false, message = "Lütfen geçerli bir e-posta adresi girin." });
-                }
 
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null)
-                {
                     return Json(new { success = false, message = "Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı." });
-                }
 
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var resetLink = Url.Action("ResetPassword", "Account", new { token = resetToken, email = model.Email }, Request.Scheme);

@@ -1,104 +1,111 @@
 ﻿@model IndexViewModel
-
-
-
+@using Microsoft.AspNetCore.Http
+@{
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+}
 
 <h2 class="text-center">Ürünlerimiz</h2>
 
 <div class="row">
-	@foreach (var product in Model.Products)
-	{
-<div class="col-md-3 mb-4">
-	<div class="card shadow-sm">
-		<!-- Ürün Görseli -->
-		<a href="@Url.Action("Detail", "Products", new { id = product.Id })">
-			<img src="@product.ImgUrl" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
-		</a>
-		<div class="card-body">
-			<!-- Ürün Adı -->
-			<h5 class="card-title">
-				<a href="@Url.Action("Detail", "Products", new { id = product.Id })" class="text-decoration-none text-dark">
-					@product.Name
-				</a>
-			</h5>
-			<!-- Ürün Açıklaması -->
-			<p class="card-text multi-line-text">@product.Despriction</p>
-			<!-- Ürün Fiyatı -->
-			<p class="card-text text-right font-weight-bold text-primary">@product.Price.ToString("0.00")</p>
-			<!-- Stok Durumu -->
-			<p class="card-text text-success">
-				@if (product.StockCount > 0)
-				{@($"Stok: {product.StockCount}") }
-				else
-				{
-<span class="text-danger">Tükendi</span>}
-			</p>
-			<!-- Sepete Ekle -->
-			@if (product.StockCount > 0)
-			{
-<form method="post" asp-action="AddCart" asp-controller="Cart" class="add-to-cart-form">
-	<input type="hidden" name="id" value="@product.Id" />
-	<div class="input-group mb-2">
-		<input type="number" name="quantity" class="form-control" value="1" min="1" max="@product.StockCount" />
-		<button type="submit" class="btn btn-success">Sepete Ekle</button>
-	</div>
-</form>}
-		</div>
-	</div>
-</div>}
+    @foreach (var product in Model.Products)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <!-- Ürün Görseli -->
+                <a href="@Url.Action("Detail", "Products", new { id = product.Id })">
+                    <img src="@product.ImgUrl" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                </a>
+                <div class="card-body">
+                    <!-- Ürün Adı -->
+                    <h5 class="card-title">
+                        <a href="@Url.Action("Detail", "Products", new { id = product.Id })" class="text-decoration-none text-dark">
+                            @product.Name
+                        </a>
+                    </h5>
+                    <!-- Ürün Açıklaması -->
+                    <p class="card-text multi-line-text">@product.Despriction</p>
+                    <!-- Ürün Fiyatı -->
+                    <p class="card-text text-right font-weight-bold text-primary">@product.Price.ToString("0.00") ₺</p>
+                    <!-- Stok Durumu -->
+                    <p class="card-text text-success">
+                        @if (product.StockCount > 0)
+                        {
+                            @($"Stok: {product.StockCount}")
+                        }
+                        else
+                        {
+                            <span class="text-danger">Tükendi</span>
+                        }
+                    </p>
+                    @if (isAuthenticated)
+                    {
+                        <!-- Sepete Ekle -->
+                        @if (product.StockCount > 0)
+                        {
+                            <form method="post" asp-action="AddCart" asp-controller="Cart" class="add-to-cart-form">
+                                <input type="hidden" name="id" value="@product.Id" />
+                                <div class="input-group mb-2">
+                                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="@product.StockCount" />
+                                    <button type="submit" class="btn btn-success">Sepete Ekle</button>
+                                </div>
+                            </form>}
+                    }
+                </div>
+            </div>
+        </div>}
 </div>
 
 
 @section Styles {
-	<style>
-		/* Kart Tasarımı */
-		.card {
-			border: none;
-			transition: transform 0.2s, box-shadow 0.2s;
-		}
+    <style>
+        /* Kart Tasarımı */
+        .card {
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-			.card:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-			}
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
 
-		/* Çok Satırlı Metin Kırpma */
-		.multi-line-text {
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			line-height: 1.5em;
-			max-height: 3.0em;
-		}
-	</style>
+        /* Çok Satırlı Metin Kırpma */
+        .multi-line-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5em;
+            max-height: 3.0em;
+        }
+    </style>
 }
 
 @section Scripts {
-	<!-- Toastr Kütüphanesi -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Toastr Kütüphanesi -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-	<script>
-	// AJAX İle Sepete Ekleme
-		document.querySelectorAll('.add-to-cart-form').forEach(form => {
-			form.addEventListener('submit', function (e) {
-				e.preventDefault();
+    <script>
+        // AJAX İle Sepete Ekleme
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-				const formData = new FormData(form);
-				fetch(form.action, {
-					method: form.method,
-					body: formData
-				})
-					.then(response => response.json())
-					.then(data => {
-						if (data.success) {
-							toastr.success(data.message); // Başarılı bildirim
-						} else {
-							toastr.error(data.message); // Hata bildirimi
-						}
-					});
-			});
-		});</script>
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            toastr.success(data.message); // Başarılı bildirim
+                        } else {
+                            toastr.error(data.message); // Hata bildirimi
+                        }
+                    });
+            });
+        });</script>
 }

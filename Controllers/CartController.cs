@@ -31,8 +31,11 @@ namespace miniETicaret.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCart(int id, int quantity)
         {
-            // Kullanıcıyı al
-            AppUser user = await _userManager.GetUserAsync(User);
+
+            // Sepete Girilen Miktarı Kontrol et
+            if (quantity <= 0)
+                return Json(new { success = false, message = "Sepete Minimum 1 Adet Ürün Adedi" });
+
 
             // Ürünü al ve stok kontrolü yap
             Product product = await _eTicaretDBContext.Products.FirstOrDefaultAsync(p => p.Id == id);
@@ -51,6 +54,9 @@ namespace miniETicaret.Controllers
                 });
             }
 
+            // Kullanıcıyı al
+            AppUser user = await _userManager.GetUserAsync(User);
+
             // Sepette aynı ürün var mı kontrol et
             Cart cartItem = await _eTicaretDBContext.Carts
                 .FirstOrDefaultAsync(c => c.CustomerId == user.Id && c.ProductId == id);
@@ -63,12 +69,11 @@ namespace miniETicaret.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = $"Bu ürün için maksimum eklenebilir miktar: {product.StockCount - cartItem.Quantity}"
+                        message = $"Bu ürün zaten sepetinizde bulunmaktadır.\nMaksimum eklenebilir miktar: {product.StockCount - cartItem.Quantity}"
                     });
                 }
 
                 cartItem.Quantity += quantity;
-                product.StockCount -= quantity;
                 _eTicaretDBContext.Update(cartItem);
             }
             else
@@ -80,12 +85,10 @@ namespace miniETicaret.Controllers
                     ProductId = id,
                     Quantity = quantity
                 };
-                product.StockCount -= quantity;
                 await _eTicaretDBContext.Carts.AddAsync(newCart);
             }
 
             // Veritabanı değişikliklerini kaydet
-            _eTicaretDBContext.Update(product);
             await _eTicaretDBContext.SaveChangesAsync();
 
             return Json(new { success = true, message = "Ürün sepete başarıyla eklendi!" });

@@ -35,7 +35,8 @@ namespace miniETicaret.Models.ViewModel.Home
                     Name = x.Name,
                     Price = x.Price,
                     Despriction = x.Despriction,
-                    ImgUrl = x.ImgUrl
+                    ImgUrl = x.ImgUrl,
+                    StockCount = x.StockCount,
                 });
 
             Products = await query.ToListAsync();

@@ -19,29 +19,13 @@ namespace miniETicaret.Controllers
             _eTicaretDBContext = eTicaretDBContext;
         }
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    IndexViewModel model = new(_eTicaretDBContext);
-        //    model.Products = await model.GetProductsAsync();
-        //    return View(model);
-        //}
         public async Task<IActionResult> Index()
         {
             IndexViewModel model = new(_eTicaretDBContext);
-            model.Products = await _eTicaretDBContext.Products
-                .Select(p => new Product
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Despriction = p.Despriction,
-                    Price = p.Price,
-                    StockCount = p.StockCount, // Stok miktarı alınıyor
-            ImgUrl = p.ImgUrl
-                })
-                .ToListAsync();
-
+            model.Products = await model.GetProductsAsync(); //ıd,name,desp,price,stockCount,imgurl
             return View(model);
         }
+
 
     }
 }
