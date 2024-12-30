@@ -49,26 +49,25 @@
                 var quantityValue = $('#quantity').val();
                 var productIdValue = $('#productId').val();
 
-                console.log("stok sayisi : "+quantityValue);
-                console.log("id : " + productIdValue);
-
-                $.ajax({
-                    url: '/Cart/AddCart',
+                fetch('/Cart/AddCart', {
                     method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ id: productIdValue, quantity: quantityValue }),
-                    success: function (data) {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id=${productIdValue}&quantity=${quantityValue}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
                         if (data.success) {
                             toastr.success(data.message);
                         } else {
                             toastr.error(data.message);
                         }
-                    },
-                    error: function (xhr, status, error) {
+                    })
+                    .catch(error => {
                         toastr.error("Bir hata oluştu! Lütfen tekrar deneyin.");
-                        console.error("AJAX Hatası:", error);
-                    }
-                });
+                        console.error("Fetch Hatası:", error);
+                    });
             });
         });
     </script>

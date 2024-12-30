@@ -133,11 +133,6 @@ namespace miniETicaret.Controllers
         {
             var seller = await _userManager.GetUserAsync(User);
 
-            if (seller == null)
-            {
-                return Unauthorized("Satıcı bulunamadı.");
-            }
-
             var products = await _eTicaretDBContext.Products
                 .Where(p => p.SellerId == seller.Id)
                 .Select(p => new SellerProductViewModel
@@ -156,14 +151,15 @@ namespace miniETicaret.Controllers
         [HttpGet]
         public async Task<IActionResult> EditSingleProduct(int id)
         {
+
+            AppUser seller = await _userManager.GetUserAsync(User);
+
             var product = await _eTicaretDBContext.Products
-                .Where(p => p.Id == id)
+                .Where(p => p.Id == id && p.SellerId==seller.Id)
                 .FirstOrDefaultAsync();
 
             if (product == null)
-            {
-                return NotFound("Ürün bulunamadı.");
-            }
+                return RedirectToAction("AccessDenied", "Error");
 
             var model = new EditProductViewModel
             {
@@ -189,31 +185,55 @@ namespace miniETicaret.Controllers
         [HttpPost]
         public async Task<IActionResult> EditSingleProduct(EditProductViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.Categories = await _eTicaretDBContext.Categories
-                    .Where(c => c.IsActive)
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.Id.ToString(),
-                        Text = c.Name
-                    }).ToListAsync();
+            EditProductValidator validator = new();
+            ValidationResult result = validator.Validate(model);
 
-                return View("EditSingleProduct", model);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                return View(model);
             }
 
-            var product = await _eTicaretDBContext.Products.FindAsync(model.Id);
+            AppUser seller = await _userManager.GetUserAsync(User);
+            var product = await _eTicaretDBContext.Products
+                .Where(p => p.Id == model.Id && p.SellerId == seller.Id)
+                .FirstOrDefaultAsync();
 
             if (product == null)
-            {
-                return NotFound("Ürün bulunamadı.");
-            }
-
-            product.Name = model.Name;
+                return RedirectToAction("AccessDenied", "Error");
+            product.Name = model.Name.ToUpper(); ;
             product.Despriction = model.Despriction;
             product.Price = model.Price;
             product.StockCount = model.StockCount;
             product.CategoryId = model.CategoryId;
+
+            
+
+            //if (!ModelState.IsValid)
+            //{
+            //    model.Categories = await _eTicaretDBContext.Categories
+            //        .Where(c => c.IsActive)
+            //        .Select(c => new SelectListItem
+            //        {
+            //            Value = c.Id.ToString(),
+            //            Text = c.Name
+            //        }).ToListAsync();
+
+            //    return View("EditSingleProduct", model);
+            //}
+
+            //var product = await _eTicaretDBContext.Products.FindAsync(model.Id);
+
+            //if (product == null)
+            //    return RedirectToAction("AccessDenied", "Error");
+            //product.Name = model.Name;
+            //product.Despriction = model.Despriction;
+            //product.Price = model.Price;
+            //product.StockCount = model.StockCount;
+            //product.CategoryId = model.CategoryId;
 
             if (model.ProductPhoto != null)
             {

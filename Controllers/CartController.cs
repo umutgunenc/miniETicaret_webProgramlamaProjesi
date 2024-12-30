@@ -48,7 +48,7 @@ namespace miniETicaret.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = $"Yetersiz stok. Mevcut stok: {product.StockCount}"
+                    message = $"Yetersiz stok. Sepetinize En Fazla {product.StockCount} Adet Ürün Ekleyebilirsiniz."
                 });
             }
 
@@ -67,7 +67,7 @@ namespace miniETicaret.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = $"Bu ürün zaten sepetinizde bulunmaktadır.\nMaksimum eklenebilir miktar: {product.StockCount - cartItem.Quantity}"
+                        message = $"Bu ürün zaten sepetinizde bulunmaktadır.Maksimum eklenebilir miktar: {product.StockCount - cartItem.Quantity}"
                     });
                 }
 
