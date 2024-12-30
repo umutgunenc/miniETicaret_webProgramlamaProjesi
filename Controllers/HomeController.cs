@@ -29,15 +29,16 @@ namespace miniETicaret.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string searchQuery)
         {
-            if (string.IsNullOrWhiteSpace(searchQuery))
-            {
+            
+           if (string.IsNullOrWhiteSpace(searchQuery))
                 return RedirectToAction("Index");
-            }
+
+            searchQuery = searchQuery.ToLower();
 
             var products = await _eTicaretDBContext.Products
-                .Where(p => p.Name.ToLower().Contains(searchQuery.ToLower()) && p.IsActive)
+                .Where(p => p.Name.ToLower().Contains(searchQuery) || p.Despriction.ToLower().Contains(searchQuery) && p.IsActive==true)
                 .Select(p => new Models.ViewModel.Products.ProductViewModel
-	            {
+                {
                     Id = p.Id,
                     Name = p.Name,
                     Price = p.Price,
@@ -45,7 +46,6 @@ namespace miniETicaret.Controllers
                     ImgUrl = p.ImgUrl
                 })
                 .ToListAsync();
-
 
             return View("SearchResults", products);
         }

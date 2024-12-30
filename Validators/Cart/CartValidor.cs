@@ -11,8 +11,8 @@ namespace miniETicaret.Validators.Cart
                 .NotNull().WithMessage("Lütfen Adet Giriniz.")
                 .NotEmpty().WithMessage("Lütfen Adet Giriniz.")
                 .GreaterThan(0).WithMessage("Girilen Miktar 0'dan Büyük Olmalı");
-                //.Must((model, quaintity) => ValidatorFunctions.HasEnoughStock(model, quaintity))
-                //.WithMessage("Stok Miktari Yetersiz, Sepetinize Daha Az Ürün Ekleyiniz");
+            //.Must((model, quaintity) => ValidatorFunctions.HasEnoughStock(model, quaintity))
+            //.WithMessage("Stok Miktari Yetersiz, Sepetinize Daha Az Ürün Ekleyiniz");
         }
     }
 }

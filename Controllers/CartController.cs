@@ -34,15 +34,13 @@ namespace miniETicaret.Controllers
 
             // Sepete Girilen Miktarı Kontrol et
             if (quantity <= 0)
-                return Json(new { success = false, message = "Sepete Minimum 1 Adet Ürün Adedi" });
+                return Json(new { success = false, message = "Sepete Minimum 1 Adet Ürün Eklenmelidir." });
 
 
             // Ürünü al ve stok kontrolü yap
             Product product = await _eTicaretDBContext.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
-            {
                 return Json(new { success = false, message = "Ürün bulunamadı." });
-            }
 
             // Stok kontrolü
             if (quantity > product.StockCount)
@@ -173,7 +171,6 @@ namespace miniETicaret.Controllers
                 _eTicaretDBContext.Update(product);
                 await _eTicaretDBContext.SaveChangesAsync();
 
-
                 ProductOrder productOrder = new()
                 {
                     ProductId = item.ProductId,
@@ -185,8 +182,6 @@ namespace miniETicaret.Controllers
 
                 await _eTicaretDBContext.OrderProducts.AddAsync(productOrder);
                 await _eTicaretDBContext.SaveChangesAsync();
-
-
             }
 
             return Json(new { success = true, message = "Sipariş başarıyla verildi!" });

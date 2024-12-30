@@ -5,6 +5,7 @@
 }
 
 <h2 class="text-center">Ürünlerimiz</h2>
+<br />
 
 <div class="row">
     @foreach (var product in Model.Products)
@@ -39,20 +40,21 @@
                     </p>
                     @if (isAuthenticated)
                     {
-                        <!-- Sepete Ekle -->
                         @if (product.StockCount > 0)
                         {
                             <form method="post" asp-action="AddCart" asp-controller="Cart" class="add-to-cart-form">
                                 <input type="hidden" name="id" value="@product.Id" />
                                 <div class="input-group mb-2">
-                                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="@product.StockCount" />
+                                    <input type="number" name="quantity" class="form-control" value="" min="1" max="@product.StockCount" />
                                     <button type="submit" class="btn btn-success">Sepete Ekle</button>
                                 </div>
-                            </form>}
+                            </form>
+                         }
                     }
                 </div>
             </div>
-        </div>}
+        </div>
+     }
 </div>
 
 
@@ -64,10 +66,10 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
 
         /* Çok Satırlı Metin Kırpma */
         .multi-line-text {
@@ -107,5 +109,6 @@
                         }
                     });
             });
-        });</script>
+        });
+    </script>
 }

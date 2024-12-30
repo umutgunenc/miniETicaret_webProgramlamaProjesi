@@ -31,7 +31,9 @@ namespace miniETicaret.Models.ViewModel.Products
                      Name = x.Name,
                      Despriction = x.Despriction,
                      Price = x.Price,
-                     ImgUrl=x.ImgUrl
+                     ImgUrl=x.ImgUrl,
+                     Quantity=x.StockCount
+                     
                  });
 
             var product = await query.FirstOrDefaultAsync();
