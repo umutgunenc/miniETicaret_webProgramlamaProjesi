@@ -34,10 +34,9 @@ namespace miniETicaret.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Order>()
-                    .HasOne(o => o.Customer)
-                    .WithMany(u => u.CustomerOrders)
-                    .HasForeignKey(o => o.CustomerId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                 .HasOne(o => o.Customer)
+                 .WithMany(u => u.CustomerOrders)
+                 .HasForeignKey(o => o.CustomerId);
 
             modelBuilder.Entity<ProductOrder>()
                 .HasKey(po => new { po.ProductId, po.OrderId, po.SellerId });
@@ -45,66 +44,21 @@ namespace miniETicaret.Data
             modelBuilder.Entity<ProductOrder>()
                 .HasOne(po => po.Product)
                 .WithMany(p => p.ProductOrders)
-                .HasForeignKey(po => po.ProductId)
-                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi olmasın
+                .HasForeignKey(po => po.ProductId);
 
             modelBuilder.Entity<ProductOrder>()
                 .HasOne(po => po.Order)
                 .WithMany(o => o.ProductOrders)
-                .HasForeignKey(po => po.OrderId)
-                .OnDelete(DeleteBehavior.Cascade); // Sipariş silindiğinde ilişkili ürün siparişlerini siler
+                .HasForeignKey(po => po.OrderId);
 
             modelBuilder.Entity<ProductOrder>()
                 .HasOne(po => po.Seller)
                 .WithMany(s => s.SellerOrders)
-                .HasForeignKey(po => po.SellerId)
-                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi olmasın
+                .HasForeignKey(po => po.SellerId);
 
-            //// AppUser ve Order arasındaki ilişkiyi tanımlıyoruz
-            //modelBuilder.Entity<Order>()
-            //    .HasOne(o => o.Customer)
-            //    .WithMany(u => u.CustomerOrders)
-            //    .HasForeignKey(o => o.CustomerId)
-            //    .OnDelete(DeleteBehavior.Cascade); // Sipariş silindiğinde müşteri siparişlerini siler
-
-            //// Product ve AppUser arasındaki ilişkiyi tanımlıyoruz
-            //modelBuilder.Entity<Product>()
-            //    .HasOne(p => p.Seller)
-            //    .WithMany(u => u.SellerProducts)
-            //    .HasForeignKey(p => p.SellerId)
-            //    .OnDelete(DeleteBehavior.Cascade); // Ürün silindiğinde satıcı ürünlerini siler
-
-            //// Product ve Category arasındaki ilişkiyi tanımlıyoruz
-            //modelBuilder.Entity<Product>()
-            //    .HasOne(p => p.Category)
-            //    .WithMany(c => c.Products)
-            //    .HasForeignKey(p => p.CategoryId)
-            //    .OnDelete(DeleteBehavior.Restrict); // Kategori silindiğinde ürünler silinmesin
-
-            //// Order ve Product arasındaki ilişki (n-n) - OrderProduct
-            //modelBuilder.Entity<ProductOrder>()
-            //    .HasKey(po => new { po.ProductId, po.OrderId });  // Birleştirilmiş anahtar
-
-            //modelBuilder.Entity<ProductOrder>()
-            //    .HasOne(po => po.Product)
-            //    .WithMany(p => p.ProductOrders)
-            //    .HasForeignKey(po => po.ProductId);
-
-            //modelBuilder.Entity<ProductOrder>()
-            //    .HasOne(po => po.Order)
-            //    .WithMany(o => o.ProductOrders)
-            //    .HasForeignKey(po => po.OrderId);
-
-            //// ProductOrder ile Seller ilişkisini yapılandırma
-            //modelBuilder.Entity<ProductOrder>()
-            //    .HasOne(po => po.Seller)  // Her ürünün bir satıcısı olacak
-            //    .WithMany(u => u.ProductOrders)  // Bir satıcı birden fazla ürüne sahip olabilir
-            //    .HasForeignKey(po => po.SellerId);
-
-
-
+            
             modelBuilder.Entity<Cart>()
-                    .HasKey(c => new { c.CustomerId, c.ProductId });
+                .HasKey(c => new { c.CustomerId, c.ProductId });
 
             modelBuilder.Entity<Cart>()
                 .HasOne(c => c.Customer)
