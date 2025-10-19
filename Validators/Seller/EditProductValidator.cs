@@ -13,7 +13,7 @@ namespace miniETicaret.Validators.Seller
                 .NotEmpty().WithMessage("Lütfen Ürün Adını Giriniz.")
                 .MaximumLength(256).WithMessage("Ürün Adı Maksimum 256 Karakter Uzunluğunda Olabilir.");
 
-            RuleFor(x => x.Despriction)
+            RuleFor(x => x.Description)
                 .NotNull().WithMessage("Lütfen Ürün Açıklamasını Giriniz.")
                 .NotEmpty().WithMessage("Lütfen Ürün Açıklamasını Giriniz.");
 

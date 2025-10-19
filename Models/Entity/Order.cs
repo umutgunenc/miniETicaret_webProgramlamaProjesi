@@ -15,7 +15,7 @@ namespace miniETicaret.Models.Entity
         public DateTime OrderTime { get; set; }
 
         public string Name { get; set; }
-        public string Despriction { get; set; }
+        public string Description { get; set; }
         public decimal TotalPrice { get; set; }
         public AppUser Customer { get; set; }
         public int CustomerId { get; set; }

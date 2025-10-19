@@ -35,19 +35,25 @@ namespace miniETicaret
 
             //DB bağlantısı için servis eklendi
             services.AddDbContext<eTicaretDBContext>(options =>
-                options.UseSqlite("Data Source=eTicaret.db"));
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             //Identity için servis eklendi
             services.AddIdentity<AppUser, AppRole>(options => 
             {
-                options.Password.RequireDigit = false;
+                // Şifre gereksinimleri
+                options.Password.RequireDigit = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireLowercase = true;
 
-                //options.Lockout.MaxFailedAccessAttempts = 3;  // 3 kere şifre yanlış girilirse blocklama yapar
-                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // 15 dakika boyunca yeni bir istek atılmaz ise kullanıcı logout olur
+                // Hesap kilitleme ayarları
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Kullanıcı ayarları
+                options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<eTicaretDBContext>()
                 .AddDefaultTokenProviders();

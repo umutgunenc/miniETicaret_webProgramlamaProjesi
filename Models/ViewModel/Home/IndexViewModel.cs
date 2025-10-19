@@ -34,7 +34,7 @@ namespace miniETicaret.Models.ViewModel.Home
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
-                    Despriction = x.Despriction,
+                    Description = x.Description,
                     ImgUrl = x.ImgUrl,
                     StockCount = x.StockCount,
                 });

@@ -36,7 +36,7 @@ namespace miniETicaret.Controllers
             searchQuery = searchQuery.ToLower();
 
             var products = await _eTicaretDBContext.Products
-                .Where(p => p.Name.ToLower().Contains(searchQuery) || p.Despriction.ToLower().Contains(searchQuery) && p.IsActive==true)
+                .Where(p => p.IsActive && (p.Name.ToLower().Contains(searchQuery) || p.Description.ToLower().Contains(searchQuery)))
                 .Select(p => new Models.ViewModel.Products.ProductViewModel
                 {
                     Id = p.Id,

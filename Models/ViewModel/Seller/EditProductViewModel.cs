@@ -11,7 +11,7 @@ namespace miniETicaret.Models.ViewModel.Seller
     {
         public int Id { get; set; } // Ürün ID
         public string Name { get; set; } // Ürün Adı
-        public string Despriction { get; set; } // Ürün Açıklaması
+        public string Description { get; set; } // Ürün Açıklaması
         public decimal Price { get; set; } // Ürün Fiyatı
         public int StockCount { get; set; } // Stok Miktarı
         public int CategoryId { get; set; } // Kategori ID

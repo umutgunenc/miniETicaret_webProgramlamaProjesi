@@ -148,12 +148,13 @@ namespace miniETicaret.Controllers
                 CustomerId = customer.Id,
                 OrderTime = DateTime.Now,
                 TotalPrice = totalPrice,
-                Despriction = $"{customer.Name} {customer.SurName} -- {DateTime.Now.ToString("HH:mm dd.MM.yyyy")}"
+                Description = $"{customer.Name} {customer.SurName} -- {DateTime.Now.ToString("HH:mm dd.MM.yyyy")}"
             };
 
             await _eTicaretDBContext.Orders.AddAsync(order);
             await _eTicaretDBContext.SaveChangesAsync();
 
+            // Tüm işlemleri tek seferde yapıp, en sonda bir kez SaveChanges çağır
             foreach (var item in selectedItems)
             {
                 Product product = await _eTicaretDBContext.Products
@@ -165,11 +166,9 @@ namespace miniETicaret.Controllers
                     .FirstOrDefaultAsync();
 
                 _eTicaretDBContext.Carts.Remove(customerCart);
-                await _eTicaretDBContext.SaveChangesAsync();
 
                 product.StockCount -= item.Quantity;
                 _eTicaretDBContext.Update(product);
-                await _eTicaretDBContext.SaveChangesAsync();
 
                 ProductOrder productOrder = new()
                 {
@@ -181,8 +180,10 @@ namespace miniETicaret.Controllers
                 };
 
                 await _eTicaretDBContext.OrderProducts.AddAsync(productOrder);
-                await _eTicaretDBContext.SaveChangesAsync();
             }
+
+            // Tek bir kez kaydet - performans iyileştirmesi
+            await _eTicaretDBContext.SaveChangesAsync();
 
             return Json(new { success = true, message = "Sipariş başarıyla verildi!" });
         }

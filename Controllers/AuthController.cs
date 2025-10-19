@@ -60,9 +60,8 @@ namespace miniETicaret.Controllers
                 return View(model);
             }
 
-            //Sayfa Kapatılınca Oturum Kapatılır 
-            //Kullanıcı İstediği Kadar Yanlış Giriş Yapabilir
-            var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
+            // Hesap kilitleme koruması aktif
+            var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: true);
 
             if (!signInResult.Succeeded)
             {
@@ -84,59 +83,29 @@ namespace miniETicaret.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> RegisterCustomer(RegisterViewModel model)
         {
-            RegisterValidator validator = new();
-            ValidationResult result = validator.Validate(model);
-
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.ErrorMessage);
-                }
-
-                return View(model);
-            }
-            model.Name = model.Name.ToUpper();
-            model.SurName = model.SurName.ToUpper();
-            model.IsActive = true;
-
-            var identityResult = await _userManager.CreateAsync(model, model.Password);
-
-            if (!identityResult.Succeeded)
-            {
-                foreach (var error in identityResult.Errors)
-                {
-                    ModelState.AddModelError("Password", error.Description);
-                }
-                return View(model);
-            }
-
-            IQueryable<int> userIdQuery = _eTicaretDBContext.Users
-                .Where(u => u.UserName == model.UserName)
-                .Select(u => u.Id);
-
-            int userId = await userIdQuery.SingleOrDefaultAsync();
-
-            await _eTicaretDBContext.UserRoles
-                .AddAsync(new IdentityUserRole<int> { RoleId = 3, UserId = userId });
-
-            await _eTicaretDBContext.SaveChangesAsync();
-
-            TempData["RegisterCompleted"] = $"{model.UserName} kullanıcı adıyla yeni bir hesap oluşturuldu.";
-
-            return View();
-
+            return await RegisterUser(model, roleId: 3, "RegisterCustomer");
         }
+
         [HttpGet]
         public IActionResult RegisterSeller()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> RegisterSeller(RegisterViewModel model)
+        {
+            return await RegisterUser(model, roleId: 2, "RegisterSeller");
+        }
+
+        /// <summary>
+        /// Ortak kullanıcı kayıt metodu - kod tekrarını önler
+        /// </summary>
+        private async Task<IActionResult> RegisterUser(RegisterViewModel model, int roleId, string viewName)
         {
             RegisterValidator validator = new();
             ValidationResult result = validator.Validate(model);
@@ -147,9 +116,9 @@ namespace miniETicaret.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-
-                return View(model);
+                return View(viewName, model);
             }
+
             model.Name = model.Name.ToUpper();
             model.SurName = model.SurName.ToUpper();
             model.IsActive = true;
@@ -162,23 +131,19 @@ namespace miniETicaret.Controllers
                 {
                     ModelState.AddModelError("Password", error.Description);
                 }
-                return View(model);
+                return View(viewName, model);
             }
 
-            IQueryable<int> userIdQuery = _eTicaretDBContext.Users
-                .Where(u => u.UserName == model.UserName)
-                .Select(u => u.Id);
-
-            int userId = await userIdQuery.SingleOrDefaultAsync();
-
+            // Kullanıcıya rol ata
+            var user = await _userManager.FindByNameAsync(model.UserName);
             await _eTicaretDBContext.UserRoles
-                .AddAsync(new IdentityUserRole<int> { RoleId = 2, UserId = userId });
+                .AddAsync(new IdentityUserRole<int> { RoleId = roleId, UserId = user.Id });
 
             await _eTicaretDBContext.SaveChangesAsync();
 
             TempData["RegisterCompleted"] = $"{model.UserName} kullanıcı adıyla yeni bir hesap oluşturuldu.";
 
-            return View();
+            return View(viewName);
         }
     }
 }
